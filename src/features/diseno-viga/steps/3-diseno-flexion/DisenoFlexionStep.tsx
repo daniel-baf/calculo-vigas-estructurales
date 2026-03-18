@@ -54,7 +54,6 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
     M1, setM1,
     Mcenter, setMcenter,
     M2, setM2,
-    chequeo,
     PHI_FLEXION,
     BRAZO_J,
     errors,
@@ -89,16 +88,24 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
           </div>
 
           {/* Chequeo de secciones */}
-          <div className="flex items-center justify-between rounded-lg bg-muted px-4 py-2.5">
-            <span className="text-sm">Chequeo de secciones</span>
-            <span className={cn(
-              'font-mono font-semibold text-sm px-2 py-0.5 rounded',
-              chequeo === 'Ok'    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-              chequeo === 'No Ok' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
-                                    'bg-muted-foreground/20 text-muted-foreground'
-            )}>
-              {chequeo}
-            </span>
+          <div className="flex flex-col gap-1 rounded-lg bg-muted px-4 py-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm">Chequeo de secciones</span>
+              <span className={cn(
+                'font-mono font-semibold text-sm px-2 py-0.5 rounded',
+                props.chequeo === 'Ok'         ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                props.chequeo === 'No Ok'      ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                props.chequeo === 'No chequea' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                                           'bg-muted-foreground/20 text-muted-foreground'
+              )}>
+                {props.chequeo}
+              </span>
+            </div>
+            {props.chequeoProceso && (
+              <p className="text-[10px] font-mono text-muted-foreground break-all leading-relaxed">
+                {props.chequeoProceso}
+              </p>
+            )}
           </div>
         </div>
       </section>

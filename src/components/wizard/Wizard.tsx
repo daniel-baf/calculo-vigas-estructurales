@@ -13,12 +13,13 @@ interface WizardStepDef {
 interface WizardProps {
   steps: WizardStepDef[];
   className?: string;
+  onStepChange?: (index: number) => void;
 }
 
 /**
  * Wizard — contenedor genérico de pasos con animaciones CSS.
  */
-export function Wizard({ steps, className }: WizardProps) {
+export function Wizard({ steps, className, onStepChange }: WizardProps) {
   const [current,   setCurrent]   = useState(0);
   const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
   const [animKey,   setAnimKey]   = useState(0);
@@ -31,6 +32,7 @@ export function Wizard({ steps, className }: WizardProps) {
     setDirection(nextIndex > current ? 'forward' : 'backward');
     setCurrent(nextIndex);
     setAnimKey(k => k + 1);
+    onStepChange?.(nextIndex);
   }
 
   return (

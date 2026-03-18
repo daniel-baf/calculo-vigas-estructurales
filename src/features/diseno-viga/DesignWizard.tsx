@@ -1,4 +1,4 @@
-import { Wizard } from '@/components/wizard/Wizard';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 import { ParametrosBasicosStep } from '@/features/diseno-viga/steps/1-parametros-basicos/ParametrosBasicosStep';
@@ -7,12 +7,63 @@ import { CargasGravitacionalesStep } from '@/features/diseno-viga/steps/2-cargas
 import { useCargasGravitacionales } from '@/features/diseno-viga/steps/2-cargas-gravitacionales/useCargasGravitacionales';
 import { DisenoFlexionStep } from '@/features/diseno-viga/steps/3-diseno-flexion/DisenoFlexionStep';
 import { useDisenoFlexion } from '@/features/diseno-viga/steps/3-diseno-flexion/useDisenoFlexion';
+import { DisenoFlexionM2Step } from '@/features/diseno-viga/steps/4-diseno-flexion-m2/DisenoFlexionM2Step';
+import { useDisenoFlexionM2 } from '@/features/diseno-viga/steps/4-diseno-flexion-m2/useDisenoFlexionM2';
+import { Sparkles } from 'lucide-react';
+
+import { ChecksBanner } from '@/components/ui/ChecksBanner';
+import { Wizard } from '@/components/wizard/Wizard';
+
+function CortanteResumenStep() {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
+      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+        <Sparkles className="h-8 w-8 text-primary animate-pulse" />
+      </div>
+      <div>
+        <h2 className="text-xl font-bold tracking-tight">Paso 5: Cortante y Resumen</h2>
+        <p className="text-muted-foreground text-sm max-w-[280px] mx-auto mt-1">
+          Aquí se implementará el diseño por cortante y el resumen final del proyecto.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export function DesignWizard() {
+  const [currentIdx, setCurrentIdx] = useState(0);
   const step1 = useParametrosBasicos();
   const step2 = useCargasGravitacionales(step1.bw, step1.h);
   // Step 3 recibe geometría del Paso 1 para chequeo de sección y tipo de pórtico
   const step3 = useDisenoFlexion(step1.portico, step1.L as number, step1.d, step1.bw, step1.h);
+  const step4 = useDisenoFlexionM2(
+    Number(step3.M2),
+    step1.fc,
+    step1.fy,
+    step1.beta ?? 0.85,
+    step1.bw,
+    step1.d,
+  );
+
+  // Determinar si mostrar banner (chequeos fallidos pero campos completos)
+  const showBanner = useMemo(() => {
+    if (currentIdx === 2) {
+      // Step 3: Flexión
+      const filled = !!step3.M1 && !!step3.Mcenter && !!step3.M2;
+      return filled && step3.chequeo !== 'Ok';
+    }
+    if (currentIdx === 3) {
+      // Step 4: M2
+      const filled = !!step4.asEtabs && !!step4.qty1 && !!step4.no1;
+      const allChecksOk =
+        step4.resultado?.chequeoAsEtabs === 'Ok' &&
+        step4.resultado?.chequeo_dc === 'Ok' &&
+        step4.resultado?.chequeoAsMinMax === 'Ok' &&
+        step4.resultado?.chequeoSeccionControlada === 'Ok';
+      return filled && !allChecksOk;
+    }
+    return false;
+  }, [currentIdx, step3, step4]);
 
   const steps = [
     {
@@ -33,15 +84,27 @@ export function DesignWizard() {
       component: <DisenoFlexionStep {...step3} />,
       isValid: step3.isValid,
     },
-    // TODO: Paso 4 — Diseño de sección (As, verificaciones)
-    // TODO: Paso 5 — Resumen y exportación
+    {
+      id: 'diseno-flexion-m2',
+      title: 'M2(−)',
+      component: <DisenoFlexionM2Step {...step4} />,
+      isValid: step4.isValid,
+    },
+    {
+      id: 'cortante-resumen',
+      title: 'Resumen',
+      component: <CortanteResumenStep />,
+      isValid: true,
+    },
+    // TODO: Paso 6 — Resumen y exportación
   ];
 
   return (
     <>
-      <div className="rounded-2xl border border-border bg-card shadow-sm p-6 sm:p-8 relative">
-        <Wizard steps={steps} />
-      </div>
+    <div className="rounded-2xl border border-border bg-card shadow-sm p-6 sm:p-8 relative overflow-hidden">
+      <ChecksBanner show={showBanner} />
+      <Wizard steps={steps} onStepChange={setCurrentIdx} />
+    </div>
 
       {/* Botón flotante Global MOCK */}
       <div className="fixed bottom-4 right-4 z-50">
@@ -70,6 +133,13 @@ export function DesignWizard() {
             step3.setM1('8231.96');
             step3.setMcenter('4304.52');
             step3.setM2('8221.33');
+
+            // Step 4
+            step4.setAsEtabs('6.63');
+            step4.setQty1('2');
+            step4.setNo1(6);
+            step4.setQty2('1');
+            step4.setNo2(4);
           }}
         >
           🧪 Autollenar Mock

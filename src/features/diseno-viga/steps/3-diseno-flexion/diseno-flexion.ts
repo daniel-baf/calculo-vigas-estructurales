@@ -9,7 +9,7 @@ export const BRAZO_J     = 0.9;  // brazo de palanca asumido (jd = 0.9d)
 
 // ── Chequeo de sección ────────────────────────────────────────────────────────
 
-export type ChequeoResult = 'Ok' | 'No Ok' | 'N/A';
+export type ChequeoResult = 'Ok' | 'No Ok' | 'No chequea';
 
 /**
  * Verifica si la sección cumple los requisitos geométricos según el tipo de pórtico.
@@ -21,20 +21,34 @@ export type ChequeoResult = 'Ok' | 'No Ok' | 'N/A';
  * @param bw - Ancho de viga (cm)    — viene del Paso 1
  * @param h  - Altura de viga (cm)   — viene del Paso 1
  */
+export interface ChequeoSeccionDetailed {
+  result: ChequeoResult;
+  proceso?: string;
+}
+
 export function chequearSeccion(
   portico: string,
   L: number,
   d: number,
   bw: number,
   h: number
-): ChequeoResult {
-  if (portico === 'P.I') return 'Ok';
+): ChequeoSeccionDetailed {
+  if (portico === 'P.I') return { result: 'Ok', proceso: 'Pórtico Intermedio (P.I): No requiere chequeo geométrico adicional.' };
+  
   if (portico === 'P.E') {
     const cond1 = L * 100 >= 4 * d;            // L (m→cm) ≥ 4d
     const cond2 = bw >= Math.max(0.3 * h, 25); // bw ≥ max(0.3h, 25)
-    return cond1 && cond2 ? 'Ok' : 'No Ok';
+    
+    const textoCond1 = `Condición 1 (L ≥ 4d): ${L*100} cm ≥ ${4*d} cm → ${cond1 ? 'Cumple' : 'No cumple'}`;
+    const textoCond2 = `Condición 2 (bw ≥ max(0.3h, 25)): ${bw} cm ≥ ${Math.max(0.3*h, 25)} cm → ${cond2 ? 'Cumple' : 'No cumple'}`;
+    
+    return { 
+      result: cond1 && cond2 ? 'Ok' : 'No Ok', 
+      proceso: `${textoCond1} | ${textoCond2}`
+    };
   }
-  return 'N/A'; // P.O — no especificado en la fórmula
+  
+  return { result: 'No chequea', proceso: 'Chequeo no definido para este tipo de pórtico.' };
 }
 
 // ── Tipos ──────────────────────────────────────────────────────────────────────

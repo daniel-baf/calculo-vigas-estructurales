@@ -15,6 +15,7 @@ export interface DisenoFlexionState {
   M2: string;      setM2: (v: string) => void;
   // Derived
   chequeo: ChequeoResult;
+  chequeoProceso?: string;
   PHI_FLEXION: number;
   BRAZO_J: number;
   // Validation
@@ -51,11 +52,12 @@ export function useDisenoFlexion(
     () => validarDisenoFlexion({ M1: Number(M1), Mcenter: Number(Mcenter), M2: Number(M2) }),
     [M1, Mcenter, M2]
   );
-  const isValid = Object.keys(errors).length === 0 && !!M1 && !!Mcenter && !!M2;
+  const isValid = Object.keys(errors).length === 0 && !!M1 && !!Mcenter && !!M2 && chequeo.result === 'Ok';
 
   return {
     M1, setM1, Mcenter, setMcenter, M2, setM2,
-    chequeo,
+    chequeo: chequeo.result,
+    chequeoProceso: chequeo.proceso,
     PHI_FLEXION, BRAZO_J,
     errors, isValid,
   };
