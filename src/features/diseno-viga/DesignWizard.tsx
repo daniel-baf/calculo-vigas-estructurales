@@ -9,6 +9,8 @@ import { DisenoFlexionStep } from '@/features/diseno-viga/steps/3-diseno-flexion
 import { useDisenoFlexion } from '@/features/diseno-viga/steps/3-diseno-flexion/useDisenoFlexion';
 import { DisenoFlexionM2Step } from '@/features/diseno-viga/steps/4-diseno-flexion-m2/DisenoFlexionM2Step';
 import { useDisenoFlexionM2 } from '@/features/diseno-viga/steps/4-diseno-flexion-m2/useDisenoFlexionM2';
+import { DisenoFlexionM1Step } from '@/features/diseno-viga/steps/5-diseno-flexion-m1/DisenoFlexionM1Step';
+import { useDisenoFlexionM1 } from '@/features/diseno-viga/steps/5-diseno-flexion-m1/useDisenoFlexionM1';
 import { Sparkles } from 'lucide-react';
 
 import { ChecksBanner } from '@/components/ui/ChecksBanner';
@@ -21,7 +23,7 @@ function CortanteResumenStep() {
         <Sparkles className="h-8 w-8 text-primary animate-pulse" />
       </div>
       <div>
-        <h2 className="text-xl font-bold tracking-tight">Paso 5: Cortante y Resumen</h2>
+        <h2 className="text-xl font-bold tracking-tight">Paso 6: Cortante y Resumen</h2>
         <p className="text-muted-foreground text-sm max-w-[280px] mx-auto mt-1">
           Aquí se implementará el diseño por cortante y el resumen final del proyecto.
         </p>
@@ -38,6 +40,14 @@ export function DesignWizard() {
   const step3 = useDisenoFlexion(step1.portico, step1.L as number, step1.d, step1.bw, step1.h);
   const step4 = useDisenoFlexionM2(
     Number(step3.M2),
+    step1.fc,
+    step1.fy,
+    step1.beta ?? 0.85,
+    step1.bw,
+    step1.d,
+  );
+  const step5 = useDisenoFlexionM1(
+    Number(step3.M1),
     step1.fc,
     step1.fy,
     step1.beta ?? 0.85,
@@ -62,8 +72,18 @@ export function DesignWizard() {
         step4.resultado?.chequeoSeccionControlada === 'Ok';
       return filled && !allChecksOk;
     }
+    if (currentIdx === 4) {
+      // Step 5: M1
+      const filled = !!step5.asEtabs && !!step5.qty1 && !!step5.no1;
+      const allChecksOk =
+        step5.resultado?.chequeoAsEtabs === 'Ok' &&
+        step5.resultado?.chequeo_dc === 'Ok' &&
+        step5.resultado?.chequeoAsMinMax === 'Ok' &&
+        step5.resultado?.chequeoSeccionControlada === 'Ok';
+      return filled && !allChecksOk;
+    }
     return false;
-  }, [currentIdx, step3, step4]);
+  }, [currentIdx, step3, step4, step5]);
 
   const steps = [
     {
@@ -89,6 +109,12 @@ export function DesignWizard() {
       title: 'M2(−)',
       component: <DisenoFlexionM2Step {...step4} />,
       isValid: step4.isValid,
+    },
+    {
+      id: 'diseno-flexion-m1',
+      title: 'M1(−)',
+      component: <DisenoFlexionM1Step {...step5} />,
+      isValid: step5.isValid,
     },
     {
       id: 'cortante-resumen',
@@ -140,6 +166,13 @@ export function DesignWizard() {
             step4.setNo1(6);
             step4.setQty2('1');
             step4.setNo2(4);
+
+            // Step 5
+            step5.setAsEtabs('6.72');
+            step5.setQty1('2');
+            step5.setNo1(6);
+            step5.setQty2('1');
+            step5.setNo2(4);
           }}
         >
           🧪 Autollenar Mock
