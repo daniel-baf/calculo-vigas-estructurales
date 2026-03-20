@@ -7,6 +7,7 @@ Esta carpeta centraliza la documentacion de la app y, en particular, del flujo d
 - `docs/diseno-viga-arquitectura.md`: como se montan los pasos en el wizard, estructura y componentes clave.
 - `docs/diseno-viga-flujo-datos.md`: flujo de datos entre pasos, dependencias y estados compartidos.
 - `docs/diseno-viga-diccionario-datos.md`: diccionario de datos por paso (inputs, derivados, validaciones y salidas).
+- `docs/pasos/README.md`: documentacion detallada por cada paso (flujo, estados, diccionario y formulas).
 
 ## Convenciones
 
