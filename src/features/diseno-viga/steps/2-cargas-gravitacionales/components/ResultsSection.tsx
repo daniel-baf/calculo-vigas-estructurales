@@ -6,9 +6,7 @@ type Props = Pick<CargasGravitacionalesState, "resultados">
 export function ResultsSection({ resultados }: Props) {
   return (
     <section>
-      <h3 className="mb-4 border-b border-primary/10 pb-2 text-sm font-bold tracking-widest text-primary uppercase">
-        Cálculo de Cargas Gravitacionales
-      </h3>
+      <h3 className="step-block-title">Cálculo de Cargas Gravitacionales</h3>
       <div className="space-y-3">
         <ResultRow
           label="Peso propio de la viga (Wpp)"

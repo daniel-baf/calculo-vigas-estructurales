@@ -7,9 +7,7 @@ export function StepSection({
 }) {
   return (
     <section className="space-y-4">
-      <h3 className="mb-4 border-b border-primary/10 pb-2 text-sm font-bold tracking-widest text-primary uppercase">
-        {title}
-      </h3>
+      <h3 className="step-block-title">{title}</h3>
       {children}
     </section>
   )

@@ -15,8 +15,8 @@ interface WizardProgressProps {
  */
 export function WizardProgress({ steps, current }: WizardProgressProps) {
   return (
-    <nav aria-label="Pasos del formulario" className="mb-8">
-      <div className="overflow-x-auto overflow-y-visible px-1 py-2">
+    <nav aria-label="Pasos del formulario" className="mb-6">
+      <div className="dashboard-soft-surface overflow-x-auto overflow-y-visible rounded-xl border px-2 py-3 sm:px-3">
         <ol className="mx-auto flex min-w-max items-center gap-0 sm:min-w-0">
           {steps.map((step, i) => {
             const isDone = i < current
@@ -54,10 +54,10 @@ export function WizardProgress({ steps, current }: WizardProgressProps) {
                       liftClass,
                       opacityClass,
                       isDone
-                        ? "border-primary bg-primary text-primary-foreground"
+                        ? "border-primary bg-primary text-primary-foreground shadow-sm"
                         : isActive
-                          ? "border-primary bg-card text-primary shadow-[0_0_0_4px_hsl(var(--primary)/0.14)]"
-                          : "border-border bg-muted text-muted-foreground"
+                          ? "border-primary bg-card text-primary shadow-[0_0_0_4px_hsl(var(--primary)/0.14)] dark:bg-card/95"
+                          : "border-border bg-muted text-muted-foreground dark:bg-card/50"
                     )}
                   >
                     {isDone ? (

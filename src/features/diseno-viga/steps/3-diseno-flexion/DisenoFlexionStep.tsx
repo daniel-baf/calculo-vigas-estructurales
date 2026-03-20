@@ -37,9 +37,7 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
       <Header />
 
       <section>
-        <h3 className="mb-4 border-b border-primary/10 pb-2 text-sm font-bold tracking-widest text-primary uppercase">
-          Chequeo de Sección
-        </h3>
+        <h3 className="step-block-title">Chequeo de Sección</h3>
         <div className="grid grid-cols-1 gap-4">
           <CheckCards
             PHI_FLEXION={PHI_FLEXION}
@@ -51,9 +49,7 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
       </section>
 
       <section>
-        <h3 className="mb-4 border-b border-primary/10 pb-2 text-sm font-bold tracking-widest text-primary uppercase">
-          Momentos de Diseño
-        </h3>
+        <h3 className="step-block-title">Momentos de Diseño</h3>
 
         <ModeSelector
           value={modoIngreso}

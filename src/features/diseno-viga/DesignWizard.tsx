@@ -117,7 +117,8 @@ export function DesignWizard() {
 
   return (
     <>
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+      <div className="dashboard-panel relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-primary/8 to-transparent dark:from-primary/14" />
         <ChecksBanner show={showBanner} />
         <Wizard steps={steps} onStepChange={setCurrentIdx} />
       </div>
@@ -126,7 +127,7 @@ export function DesignWizard() {
         <Button
           variant="secondary"
           size="sm"
-          className="border border-border shadow-lg"
+          className="border border-border shadow-lg dark:bg-card/90 dark:hover:bg-card"
           title="Ctrl + A"
           onClick={() =>
             applyDesignWizardMock({ step1, step2, step3, step4, step5, step6 })

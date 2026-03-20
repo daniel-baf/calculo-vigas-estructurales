@@ -27,9 +27,7 @@ export function InputGrid({
 }: Props) {
   return (
     <section>
-      <h3 className="mb-4 border-b border-primary/10 pb-2 text-sm font-bold tracking-widest text-primary uppercase">
-        Datos de Entrada
-      </h3>
+      <h3 className="step-block-title">Datos de Entrada</h3>
       <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
         <NumericField
           id="AT"

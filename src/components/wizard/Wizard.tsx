@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useState, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { WizardProgress } from "./WizardProgress"
 import { Button } from "@/components/ui/button"
@@ -24,10 +24,10 @@ interface ShortcutHintProps {
 function ShortcutHint({ shortcut, label }: ShortcutHintProps) {
   return (
     <span className="group relative inline-flex items-center">
-      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground">
+      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground transition-colors group-hover:border-primary/40 group-hover:text-primary">
         ?
       </span>
-      <span className="pointer-events-none absolute top-full right-0 z-20 mt-2 w-max max-w-[200px] rounded-md border border-border bg-popover px-2 py-1 text-[11px] text-popover-foreground opacity-0 shadow-md transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100">
+      <span className="pointer-events-none absolute top-full right-0 z-20 mt-2 w-max max-w-[220px] rounded-md border border-border bg-popover px-2 py-1 text-[11px] text-popover-foreground opacity-0 shadow-md transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100 dark:bg-card">
         {label}:{" "}
         <kbd className="rounded border border-border bg-muted px-1 py-0.5 font-mono text-[10px]">
           {shortcut}
@@ -49,12 +49,15 @@ export function Wizard({ steps, className, onStepChange }: WizardProps) {
   const isLast = current === steps.length - 1
   const step = steps[current]
 
-  function navigate(nextIndex: number) {
-    setDirection(nextIndex > current ? "forward" : "backward")
-    setCurrent(nextIndex)
-    setAnimKey((k) => k + 1)
-    onStepChange?.(nextIndex)
-  }
+  const navigate = useCallback(
+    (nextIndex: number) => {
+      setDirection(nextIndex > current ? "forward" : "backward")
+      setCurrent(nextIndex)
+      setAnimKey((k) => k + 1)
+      onStepChange?.(nextIndex)
+    },
+    [current, onStepChange]
+  )
 
   const canGoBack = !isFirst
   const canGoNext = !isLast && step.isValid
@@ -88,13 +91,13 @@ export function Wizard({ steps, className, onStepChange }: WizardProps) {
 
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [canGoBack, canGoNext, current])
+  }, [canGoBack, canGoNext, current, navigate])
 
   function renderNavigation(position: "top" | "bottom") {
     const positionClass =
       position === "top"
-        ? "mb-4 flex items-center justify-between border-b border-border pb-4"
-        : "mt-6 flex items-center justify-between border-t border-border pt-4"
+        ? "dashboard-soft-surface mb-4 flex items-center justify-between rounded-xl border px-3 py-2 sm:px-4"
+        : "dashboard-soft-surface mt-6 flex items-center justify-between rounded-xl border px-3 py-2 sm:px-4"
 
     return (
       <div className={positionClass}>
