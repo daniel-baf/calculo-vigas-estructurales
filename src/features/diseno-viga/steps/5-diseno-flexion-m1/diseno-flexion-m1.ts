@@ -13,9 +13,9 @@ export {
   VARILLA_MAX_RECOMENDADO,
   VARILLA_MAX_DIFF,
   type VarillaInfo,
-} from "../../../../shared/diseno-refuerzo/varillas"
+} from "@/shared/diseno-refuerzo/varillas"
 
-export { PHI_FLEXION, BRAZO_J } from "../3-diseno-flexion/diseno-flexion"
+export { PHI_FLEXION, BRAZO_J } from "~/steps/3-diseno-flexion/diseno-flexion"
 
 import {
   calcularRefuerzo,
@@ -24,7 +24,7 @@ import {
   type InputsRefuerzo,
   type ResultadoRefuerzo,
   type FiltroVariantes,
-} from "../../../../shared/diseno-refuerzo"
+} from "@/shared/diseno-refuerzo"
 
 export type { InputsRefuerzo, ResultadoRefuerzo, FiltroVariantes }
 
@@ -193,6 +193,7 @@ export function generarVariantesM1(
         asMin: r.procesos.asMin,
         asMax: r.procesos.asMax,
         c: r.procesos.c,
+        chequeoSeccionControlada: r.procesos.chequeoSeccionControlada,
       },
     })
   )

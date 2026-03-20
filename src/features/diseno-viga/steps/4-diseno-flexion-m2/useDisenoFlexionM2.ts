@@ -7,8 +7,8 @@
 import {
   useDisenoRefuerzo,
   type UseDisenoRefuerzoParams,
-} from "../../../../shared/hooks/useDisenoRefuerzo"
-import { PHI_FLEXION, BRAZO_J } from "../3-diseno-flexion/diseno-flexion"
+} from "@/shared/hooks/useDisenoRefuerzo"
+import { PHI_FLEXION, BRAZO_J } from "~/steps/3-diseno-flexion/diseno-flexion"
 import type {
   ResultadoDisenoM2,
   ErroresDisenoM2,

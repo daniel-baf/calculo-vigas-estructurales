@@ -10,44 +10,44 @@
 
 export interface InputsCargasGravitacionales {
   /** Área tributaria (m²) */
-  AT: number;
+  AT: number
   /** Carga viva por área (kg/m²) */
-  cvKgM2: number;
+  cvKgM2: number
   /** Sobrecarga — carga muerta adicional (kg/m²) */
-  scKgM2: number;
+  scKgM2: number
   /** Factor de sismo vertical Svd (adimensional) */
-  Svd: number;
+  Svd: number
   /** Ancho de viga del Paso 1 (cm) */
-  bw: number;
+  bw: number
   /** Altura de viga del Paso 1 (cm) */
-  h: number;
+  h: number
 }
 
 export interface ResultadosCargasIntermedios {
   /** CV distribuida = AT × CV_kg/m² (kgf/m) */
-  cvDistribuida: number;
+  cvDistribuida: number
   /** CM distribuida (solo SC) = AT × SC_kg/m² (kgf/m) */
-  cmDistribuida: number;
+  cmDistribuida: number
 }
 
 export interface ResultadosCargasTabla {
   /** Carga Viva total (kgf/m) */
-  CV: number;
+  CV: number
   /** Carga Muerta total = peso propio + CM distribuida (kgf/m) */
-  CM: number;
+  CM: number
   /** Sismo vertical (adimensional, tal como se ingresó) */
-  Svd: number;
+  Svd: number
   /** Carga mayorada Wu = (1.2 + Svd) × CM + CV (kgf/m) */
-  Wu: number;
+  Wu: number
   /** Peso propio calculado (kgf/m) */
-  pesoPropio: number;
+  pesoPropio: number
   /** Fórmulas y sustituciones en LaTeX */
   procesos: {
-    pesoPropio: { formula: string; sustitucion: string };
-    CV: { formula: string; sustitucion: string };
-    CM: { formula: string; sustitucion: string };
-    Wu: { formula: string; sustitucion: string };
-  };
+    pesoPropio: { formula: string; sustitucion: string }
+    CV: { formula: string; sustitucion: string }
+    CM: { formula: string; sustitucion: string }
+    Wu: { formula: string; sustitucion: string }
+  }
 }
 
 // ── Funciones puras ───────────────────────────────────────────────────────────
@@ -57,18 +57,18 @@ export interface ResultadosCargasTabla {
  * γ_concreto = 2400 kg/m³; dimensiones en cm → se dividen entre 100×100.
  */
 export function calcularPesoPropio(bw: number, h: number): number {
-  return 2400 * ((bw * h) / (100 * 100));
+  return 2400 * ((bw * h) / (100 * 100))
 }
 
 /**
  * Calcula las cargas intermedias (tablas auxiliares).
  */
 export function calcularCargasIntermedias(
-  inputs: Pick<InputsCargasGravitacionales, 'AT' | 'cvKgM2' | 'scKgM2'>
+  inputs: Pick<InputsCargasGravitacionales, "AT" | "cvKgM2" | "scKgM2">
 ): ResultadosCargasIntermedios {
-  const cvDistribuida = parseFloat((inputs.AT * inputs.cvKgM2).toFixed(2));
-  const cmDistribuida = parseFloat((inputs.AT * inputs.scKgM2).toFixed(2));
-  return { cvDistribuida, cmDistribuida };
+  const cvDistribuida = parseFloat((inputs.AT * inputs.cvKgM2).toFixed(2))
+  const cmDistribuida = parseFloat((inputs.AT * inputs.scKgM2).toFixed(2))
+  return { cvDistribuida, cmDistribuida }
 }
 
 /**
@@ -77,15 +77,15 @@ export function calcularCargasIntermedias(
 export function calcularCargasGravitacionales(
   inputs: InputsCargasGravitacionales
 ): ResultadosCargasTabla {
-  const { AT, cvKgM2, scKgM2, Svd, bw, h } = inputs;
-  const { cvDistribuida, cmDistribuida } = calcularCargasIntermedias(inputs);
+  const { AT, cvKgM2, scKgM2, Svd, bw, h } = inputs
+  const { cvDistribuida, cmDistribuida } = calcularCargasIntermedias(inputs)
 
-  const pesoProp = calcularPesoPropio(bw, h);
-  const CM = parseFloat((pesoProp + cmDistribuida).toFixed(2));
-  const CV = cvDistribuida;
-  const Wu = parseFloat(((1.2 + Svd) * CM + CV).toFixed(2));
+  const pesoProp = calcularPesoPropio(bw, h)
+  const CM = parseFloat((pesoProp + cmDistribuida).toFixed(2))
+  const CV = cvDistribuida
+  const Wu = parseFloat(((1.2 + Svd) * CM + CV).toFixed(2))
 
-  const fmt = (v: number) => v.toFixed(2);
+  const fmt = (v: number) => v.toFixed(2)
 
   return {
     CV,
@@ -95,50 +95,50 @@ export function calcularCargasGravitacionales(
     pesoPropio: pesoProp,
     procesos: {
       pesoPropio: {
-        formula: 'W_{pp} = 2400 \\cdot \\frac{b_w \\cdot h}{100^2}',
+        formula: "W_{pp} = 2400 \\cdot \\frac{b_w \\cdot h}{100^2}",
         sustitucion: `W_{pp} = 2400 \\cdot \\frac{${bw} \\cdot ${h}}{100^2} = ${fmt(pesoProp)} \\text{ kgf/m}`,
       },
       CV: {
-        formula: 'CV = AT \\cdot CV_{kg/m^2}',
+        formula: "CV = AT \\cdot CV_{kg/m^2}",
         sustitucion: `CV = ${AT} \\cdot ${cvKgM2} = ${fmt(CV)} \\text{ kgf/m}`,
       },
       CM: {
-        formula: 'CM = W_{pp} + (AT \\cdot SC_{kg/m^2})',
+        formula: "CM = W_{pp} + (AT \\cdot SC_{kg/m^2})",
         sustitucion: `CM = ${fmt(pesoProp)} + (${AT} \\cdot ${scKgM2}) = ${fmt(CM)} \\text{ kgf/m}`,
       },
       Wu: {
-        formula: 'W_u = (1.2 + S_{vd}) \\cdot CM + CV',
+        formula: "W_u = (1.2 + S_{vd}) \\cdot CM + CV",
         sustitucion: `W_u = (1.2 + ${Svd}) \\cdot ${fmt(CM)} + ${fmt(CV)} = ${fmt(Wu)} \\text{ kgf/m}`,
       },
     },
-  };
+  }
 }
 
 // ── Validación ────────────────────────────────────────────────────────────────
 
 export interface ErroresCargas {
-  AT?: string;
-  cvKgM2?: string;
-  scKgM2?: string;
-  Svd?: string;
+  AT?: string
+  cvKgM2?: string
+  scKgM2?: string
+  Svd?: string
 }
 
 export function validarCargasGravitacionales(
   inputs: InputsCargasGravitacionales
 ): ErroresCargas {
-  const e: ErroresCargas = {};
+  const e: ErroresCargas = {}
 
-  if (!inputs.AT || isNaN(inputs.AT))           e.AT    = 'Campo requerido';
-  else if (inputs.AT <= 0)                       e.AT    = 'Debe ser mayor a 0';
+  if (!inputs.AT || isNaN(inputs.AT)) e.AT = "Campo requerido"
+  else if (inputs.AT <= 0) e.AT = "Debe ser mayor a 0"
 
-  if (!inputs.cvKgM2 || isNaN(inputs.cvKgM2))   e.cvKgM2 = 'Campo requerido';
-  else if (inputs.cvKgM2 < 0)                    e.cvKgM2 = 'No puede ser negativo';
+  if (!inputs.cvKgM2 || isNaN(inputs.cvKgM2)) e.cvKgM2 = "Campo requerido"
+  else if (inputs.cvKgM2 < 0) e.cvKgM2 = "No puede ser negativo"
 
-  if (!inputs.scKgM2 || isNaN(inputs.scKgM2))   e.scKgM2 = 'Campo requerido';
-  else if (inputs.scKgM2 < 0)                    e.scKgM2 = 'No puede ser negativo';
+  if (!inputs.scKgM2 || isNaN(inputs.scKgM2)) e.scKgM2 = "Campo requerido"
+  else if (inputs.scKgM2 < 0) e.scKgM2 = "No puede ser negativo"
 
-  if (inputs.Svd === undefined || isNaN(inputs.Svd)) e.Svd = 'Campo requerido';
-  else if (inputs.Svd < 0)                            e.Svd = 'No puede ser negativo';
+  if (inputs.Svd === undefined || isNaN(inputs.Svd)) e.Svd = "Campo requerido"
+  else if (inputs.Svd < 0) e.Svd = "No puede ser negativo"
 
-  return e;
+  return e
 }
