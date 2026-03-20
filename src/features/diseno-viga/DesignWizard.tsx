@@ -11,6 +11,8 @@ import { DisenoFlexionM2Step } from '@/features/diseno-viga/steps/4-diseno-flexi
 import { useDisenoFlexionM2 } from '@/features/diseno-viga/steps/4-diseno-flexion-m2/useDisenoFlexionM2';
 import { DisenoFlexionM1Step } from '@/features/diseno-viga/steps/5-diseno-flexion-m1/DisenoFlexionM1Step';
 import { useDisenoFlexionM1 } from '@/features/diseno-viga/steps/5-diseno-flexion-m1/useDisenoFlexionM1';
+import { DisenoFlexionM1PosStep } from '@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/DisenoFlexionM1PosStep';
+import { useDisenoFlexionM1Pos } from '@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/useDisenoFlexionM1Pos';
 import { Sparkles } from 'lucide-react';
 
 import { ChecksBanner } from '@/components/ui/ChecksBanner';
@@ -55,6 +57,18 @@ export function DesignWizard() {
     step1.d,
   );
 
+  const step6 = useDisenoFlexionM1Pos({
+    fc: step1.fc,
+    fy: step1.fy,
+    bw: step1.bw,
+    h: step1.h,
+    d: step1.d,
+    rec: step1.rec,
+    portico: step1.portico,
+    phiMnNeg: step5.resultado?.phiMn || 0,
+    asMin: step3.asMin,
+  });
+
   // Determinar si mostrar banner (chequeos fallidos pero campos completos)
   const showBanner = useMemo(() => {
     if (currentIdx === 2) {
@@ -82,39 +96,49 @@ export function DesignWizard() {
         step5.resultado?.chequeoSeccionControlada === 'Ok';
       return filled && !allChecksOk;
     }
+    if (currentIdx === 5) {
+      // Step 6: M1+
+      return !!step6.resultado && !step6.resultado.cumpleDC;
+    }
     return false;
-  }, [currentIdx, step3, step4, step5]);
+  }, [currentIdx, step3, step4, step5, step6]);
 
   const steps = [
     {
       id: 'parametros-basicos',
-      title: 'Parámetros Básicos',
+      title: 'Datos Generales',
       component: <ParametrosBasicosStep {...step1} />,
       isValid: step1.isValid,
     },
     {
       id: 'cargas-gravitacionales',
-      title: 'Cargas',
+      title: 'Cargas Gravitacionales',
       component: <CargasGravitacionalesStep {...step2} />,
       isValid: step2.isValid,
     },
     {
       id: 'diseno-flexion',
-      title: 'Flexión',
+      title: 'Diseño de Flexión',
       component: <DisenoFlexionStep {...step3} />,
       isValid: step3.isValid,
     },
     {
       id: 'diseno-flexion-m2',
-      title: 'M2(−)',
+      title: 'M2(−) Derecho',
       component: <DisenoFlexionM2Step {...step4} />,
       isValid: step4.isValid,
     },
     {
       id: 'diseno-flexion-m1',
-      title: 'M1(−)',
+      title: 'M1(−) Izquierdo',
       component: <DisenoFlexionM1Step {...step5} />,
       isValid: step5.isValid,
+    },
+    {
+      id: 'diseno-flexion-m1-pos',
+      title: 'M1(+) Izquierdo',
+      component: <DisenoFlexionM1PosStep {...step6} />,
+      isValid: step6.isValid,
     },
     {
       id: 'cortante-resumen',
@@ -122,15 +146,14 @@ export function DesignWizard() {
       component: <CortanteResumenStep />,
       isValid: true,
     },
-    // TODO: Paso 6 — Resumen y exportación
   ];
 
   return (
     <>
-    <div className="rounded-2xl border border-border bg-card shadow-sm p-6 sm:p-8 relative overflow-hidden">
-      <ChecksBanner show={showBanner} />
-      <Wizard steps={steps} onStepChange={setCurrentIdx} />
-    </div>
+      <div className="rounded-2xl border border-border bg-card shadow-sm p-6 sm:p-8 relative overflow-hidden">
+        <ChecksBanner show={showBanner} />
+        <Wizard steps={steps} onStepChange={setCurrentIdx} />
+      </div>
 
       {/* Botón flotante Global MOCK */}
       <div className="fixed bottom-4 right-4 z-50">
@@ -168,11 +191,15 @@ export function DesignWizard() {
             step4.setNo2(4);
 
             // Step 5
-            step5.setAsEtabs('6.72');
+            step5.setAsEtabs('6.65');
             step5.setQty1('2');
             step5.setNo1(6);
             step5.setQty2('1');
             step5.setNo2(4);
+
+            // Step 6
+            step6.setN1('3');
+            step6.setNo1('4');
           }}
         >
           🧪 Autollenar Mock

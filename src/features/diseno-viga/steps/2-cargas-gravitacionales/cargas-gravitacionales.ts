@@ -39,6 +39,15 @@ export interface ResultadosCargasTabla {
   Svd: number;
   /** Carga mayorada Wu = (1.2 + Svd) × CM + CV (kgf/m) */
   Wu: number;
+  /** Peso propio calculado (kgf/m) */
+  pesoPropio: number;
+  /** Fórmulas y sustituciones en LaTeX */
+  procesos: {
+    pesoPropio: { formula: string; sustitucion: string };
+    CV: { formula: string; sustitucion: string };
+    CM: { formula: string; sustitucion: string };
+    Wu: { formula: string; sustitucion: string };
+  };
 }
 
 // ── Funciones puras ───────────────────────────────────────────────────────────
@@ -68,18 +77,40 @@ export function calcularCargasIntermedias(
 export function calcularCargasGravitacionales(
   inputs: InputsCargasGravitacionales
 ): ResultadosCargasTabla {
+  const { AT, cvKgM2, scKgM2, Svd, bw, h } = inputs;
   const { cvDistribuida, cmDistribuida } = calcularCargasIntermedias(inputs);
 
-  const pesoProp = calcularPesoPropio(inputs.bw, inputs.h);
+  const pesoProp = calcularPesoPropio(bw, h);
   const CM = parseFloat((pesoProp + cmDistribuida).toFixed(2));
   const CV = cvDistribuida;
-  const Wu = parseFloat(((1.2 + inputs.Svd) * CM + CV).toFixed(2));
+  const Wu = parseFloat(((1.2 + Svd) * CM + CV).toFixed(2));
+
+  const fmt = (v: number) => v.toFixed(2);
 
   return {
     CV,
     CM,
-    Svd: inputs.Svd,
+    Svd,
     Wu,
+    pesoPropio: pesoProp,
+    procesos: {
+      pesoPropio: {
+        formula: 'W_{pp} = 2400 \\cdot \\frac{b_w \\cdot h}{100^2}',
+        sustitucion: `W_{pp} = 2400 \\cdot \\frac{${bw} \\cdot ${h}}{100^2} = ${fmt(pesoProp)} \\text{ kgf/m}`,
+      },
+      CV: {
+        formula: 'CV = AT \\cdot CV_{kg/m^2}',
+        sustitucion: `CV = ${AT} \\cdot ${cvKgM2} = ${fmt(CV)} \\text{ kgf/m}`,
+      },
+      CM: {
+        formula: 'CM = W_{pp} + (AT \\cdot SC_{kg/m^2})',
+        sustitucion: `CM = ${fmt(pesoProp)} + (${AT} \\cdot ${scKgM2}) = ${fmt(CM)} \\text{ kgf/m}`,
+      },
+      Wu: {
+        formula: 'W_u = (1.2 + S_{vd}) \\cdot CM + CV',
+        sustitucion: `W_u = (1.2 + ${Svd}) \\cdot ${fmt(CM)} + ${fmt(CV)} = ${fmt(Wu)} \\text{ kgf/m}`,
+      },
+    },
   };
 }
 

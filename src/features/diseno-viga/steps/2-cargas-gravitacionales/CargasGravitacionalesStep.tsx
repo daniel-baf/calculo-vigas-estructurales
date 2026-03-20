@@ -1,5 +1,7 @@
 import { cn } from '@/lib/utils';
+import { ResultRow } from '@/components/ui/ResultRow';
 import type { CargasGravitacionalesState } from './useCargasGravitacionales';
+import { FormulaRenderer } from '@/shared/components/FormulaRenderer';
 
 // ── Subcomponentes ────────────────────────────────────────────────────────────
 
@@ -43,60 +45,7 @@ function NumericField({ id, label, unit, value, onChange, min, step = 'any', err
   );
 }
 
-interface ResultRowProps {
-  label: string;
-  value: number | null | undefined;
-  unit: string;
-  highlight?: boolean;
-}
 
-function ResultRow({ label, value, unit, highlight }: ResultRowProps) {
-  return (
-    <div className={cn(
-      'flex items-center justify-between rounded-lg px-4 py-2.5 gap-4',
-      highlight
-        ? 'bg-primary text-primary-foreground font-semibold'
-        : 'bg-muted'
-    )}>
-      <span className="text-sm">{label}</span>
-      <span className="font-mono text-sm tabular-nums">
-        {value !== null && value !== undefined
-          ? `${value.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ${unit}`
-          : '—'}
-      </span>
-    </div>
-  );
-}
-
-interface IntermediateRowProps {
-  label1: string;
-  label2: string;
-  value1: string | number;
-  value2: string | number;
-  result: number | null;
-  unit: string;
-}
-
-function IntermediateRow({ label1, label2, value1, value2, result, unit }: IntermediateRowProps) {
-  return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg border border-dashed border-border bg-muted/50 px-4 py-2.5">
-      <div className="text-xs text-muted-foreground">
-        <p className="font-medium text-foreground">{label1}</p>
-        <p>{label2}</p>
-      </div>
-      <div className="flex items-center gap-2 text-sm font-mono">
-        <span className="text-primary font-semibold">{value1 || '—'}</span>
-        <span className="text-muted-foreground">×</span>
-        <span className="text-primary font-semibold">{value2 || '—'}</span>
-      </div>
-      <div className="text-right text-sm font-mono font-semibold">
-        {result !== null && result !== undefined
-          ? `${result.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ${unit}`
-          : '—'}
-      </div>
-    </div>
-  );
-}
 
 // ── Paso 2 ────────────────────────────────────────────────────────────────────
 
@@ -109,15 +58,23 @@ export function CargasGravitacionalesStep(props: CargasGravitacionalesState) {
     cvKgM2, setCvKgM2,
     scKgM2, setScKgM2,
     Svd, setSvd,
-    intermedios, resultados, errors,
+    resultados, errors,
   } = props;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-xl font-bold tracking-tight text-foreground">
+          Paso 2: Cargas Gravitacionales
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Ingresa el área tributaria y las cargas vivas y muertas para calcular la carga mayorada Wu.
+        </p>
+      </div>
 
       {/* ── Datos de entrada ───────────────────────────────────────── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4 border-b border-primary/10 pb-2">
           Datos de Entrada
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
@@ -146,46 +103,29 @@ export function CargasGravitacionalesStep(props: CargasGravitacionalesState) {
         </div>
       </section>
 
-      {/* ── Cargas intermedias ─────────────────────────────────────── */}
-      <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-          Cargas Distribuidas (AT × carga/m²)
-        </h3>
-        <div className="space-y-2">
-          <IntermediateRow
-            label1="AT (m²) × CV (kg/m²)"
-            label2="CV Distribuida"
-            value1={AT || ''}
-            value2={cvKgM2 || ''}
-            result={intermedios?.cvDistribuida ?? null}
-            unit="kgf/m"
-          />
-          <IntermediateRow
-            label1="AT (m²) × SC (kg/m²)"
-            label2="CM Distribuida"
-            value1={AT || ''}
-            value2={scKgM2 || ''}
-            result={intermedios?.cmDistribuida ?? null}
-            unit="kgf/m"
-          />
-        </div>
-      </section>
-
       {/* ── Tabla de resultados ────────────────────────────────────── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-          Cargas Gravitacionales
+        <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4 border-b border-primary/10 pb-2">
+          Cálculo de Cargas Gravitacionales
         </h3>
-        <div className="space-y-1.5">
+        <div className="space-y-3">
+          <ResultRow
+            label="Peso propio de la viga (Wpp)"
+            value={resultados?.pesoPropio}
+            unit="kgf/m"
+            proceso={resultados?.procesos.pesoPropio}
+          />
           <ResultRow
             label="Carga Viva (CV)"
             value={resultados?.CV}
             unit="kgf/m"
+            proceso={resultados?.procesos.CV}
           />
           <ResultRow
-            label="Carga Muerta (CM) = peso propio + CM distribuida"
+            label="Carga Muerta (CM)"
             value={resultados?.CM}
             unit="kgf/m"
+            proceso={resultados?.procesos.CM}
           />
           <ResultRow
             label="Sismo vertical (Svd)"
@@ -197,6 +137,7 @@ export function CargasGravitacionalesStep(props: CargasGravitacionalesState) {
             value={resultados?.Wu}
             unit="kgf/m"
             highlight
+            proceso={resultados?.procesos.Wu}
           />
         </div>
         {!resultados && (

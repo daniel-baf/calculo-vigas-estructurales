@@ -101,10 +101,19 @@ export function ParametrosBasicosStep(props: ParametrosBasicosState) {
   const porticoActual   = TIPOS_PORTICO.find((p) => p.value === portico);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-xl font-bold tracking-tight text-foreground">
+          Paso 1: Datos Generales
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Define los materiales, el sistema estructural y la geometría de la viga.
+        </p>
+      </div>
+
       {/* ── Materiales ───────────────────────────────────────────── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4 border-b border-primary/10 pb-2">
           Materiales
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
@@ -132,11 +141,9 @@ export function ParametrosBasicosStep(props: ParametrosBasicosState) {
         </div>
       </section>
 
-      <Divider />
-
       {/* ── Sistema Estructural ───────────────────────────────────── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4 border-b border-primary/10 pb-2">
           Sistema Estructural
         </h3>
         <div className="flex flex-col gap-1.5">
@@ -151,11 +158,9 @@ export function ParametrosBasicosStep(props: ParametrosBasicosState) {
         </div>
       </section>
 
-      <Divider />
-
       {/* ── Geometría ────────────────────────────────────────────── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4 border-b border-primary/10 pb-2">
           Geometría
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">

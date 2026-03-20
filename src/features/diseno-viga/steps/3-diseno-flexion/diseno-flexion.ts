@@ -23,7 +23,12 @@ export type ChequeoResult = 'Ok' | 'No Ok' | 'No chequea';
  */
 export interface ChequeoSeccionDetailed {
   result: ChequeoResult;
-  proceso?: string;
+  procesos?: {
+    condicion1?: { formula: string; sustitucion: string };
+    condicion2?: { formula: string; sustitucion: string };
+    general?: { formula: string; sustitucion: string };
+    brazoJ?: { formula: string; sustitucion: string };
+  };
 }
 
 export function chequearSeccion(
@@ -33,22 +38,55 @@ export function chequearSeccion(
   bw: number,
   h: number
 ): ChequeoSeccionDetailed {
-  if (portico === 'P.I') return { result: 'Ok', proceso: 'Pórtico Intermedio (P.I): No requiere chequeo geométrico adicional.' };
-  
-  if (portico === 'P.E') {
-    const cond1 = L * 100 >= 4 * d;            // L (m→cm) ≥ 4d
-    const cond2 = bw >= Math.max(0.3 * h, 25); // bw ≥ max(0.3h, 25)
-    
-    const textoCond1 = `Condición 1 (L ≥ 4d): ${L*100} cm ≥ ${4*d} cm → ${cond1 ? 'Cumple' : 'No cumple'}`;
-    const textoCond2 = `Condición 2 (bw ≥ max(0.3h, 25)): ${bw} cm ≥ ${Math.max(0.3*h, 25)} cm → ${cond2 ? 'Cumple' : 'No cumple'}`;
-    
+  const procesoBrazoJ = {
+    formula: 'jd \\approx 0.9d',
+    sustitucion: `jd \\approx 0.9(${d}) = ${(0.9 * d).toFixed(2)} \\text{ cm}`
+  };
+
+  if (portico === 'P.I') {
     return { 
-      result: cond1 && cond2 ? 'Ok' : 'No Ok', 
-      proceso: `${textoCond1} | ${textoCond2}`
+      result: 'Ok', 
+      procesos: {
+        general: {
+          formula: '\\text{Pórtico Intermedio (P.I)}',
+          sustitucion: '\\text{No requiere chequeo geométrico adicional según NSR-10/ACI 318.}'
+        },
+        brazoJ: procesoBrazoJ
+      }
     };
   }
   
-  return { result: 'No chequea', proceso: 'Chequeo no definido para este tipo de pórtico.' };
+  if (portico === 'P.E') {
+    const cond1 = L * 100 >= 4 * d;            // L (m→cm) ≥ 4d
+    const valMaxBw = Math.max(0.3 * h, 25);
+    const cond2 = bw >= valMaxBw;             // bw ≥ max(0.3h, 25)
+    
+    return { 
+      result: cond1 && cond2 ? 'Ok' : 'No Ok', 
+      procesos: {
+        condicion1: {
+          formula: 'L_{n} \\ge 4d',
+          sustitucion: `${(L * 100).toFixed(2)} \\text{ cm} \\ge 4(${d}) = ${(4 * d).toFixed(2)} \\text{ cm} \\rightarrow ${cond1 ? '\\text{Ok}' : '\\text{No Ok}'}`
+        },
+        condicion2: {
+          formula: 'b_w \\ge \\max(0.3h, 25 \\text{ cm})',
+          sustitucion: `${bw} \\text{ cm} \\ge \\max(0.3 \\cdot ${h}, 25) = ${valMaxBw.toFixed(2)} \\text{ cm} \\rightarrow ${cond2 ? '\\text{Ok}' : '\\text{No Ok}'}`
+        },
+        brazoJ: procesoBrazoJ
+      }
+    };
+  }
+  
+  return { 
+    result: 'No chequea', 
+    procesos: {
+      general: {
+        formula: '\\text{Pórtico Ordinario (P.O) o No definido}',
+        sustitucion: '\\text{Chequeo no definido para este tipo de pórtico.}'
+      },
+      brazoJ: procesoBrazoJ
+    }
+  };
 }
 
 // ── Tipos ──────────────────────────────────────────────────────────────────────

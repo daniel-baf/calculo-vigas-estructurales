@@ -15,7 +15,12 @@ export interface DisenoFlexionState {
   M2: string;      setM2: (v: string) => void;
   // Derived
   chequeo: ChequeoResult;
-  chequeoProceso?: string;
+  procesos?: {
+    condicion1?: { formula: string; sustitucion: string };
+    condicion2?: { formula: string; sustitucion: string };
+    general?: { formula: string; sustitucion: string };
+    brazoJ?: { formula: string; sustitucion: string };
+  };
   PHI_FLEXION: number;
   BRAZO_J: number;
   // Validation
@@ -57,7 +62,7 @@ export function useDisenoFlexion(
   return {
     M1, setM1, Mcenter, setMcenter, M2, setM2,
     chequeo: chequeo.result,
-    chequeoProceso: chequeo.proceso,
+    procesos: chequeo.procesos,
     PHI_FLEXION, BRAZO_J,
     errors, isValid,
   };

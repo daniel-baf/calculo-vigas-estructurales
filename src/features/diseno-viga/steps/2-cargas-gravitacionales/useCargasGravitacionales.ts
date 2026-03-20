@@ -48,27 +48,27 @@ export function useCargasGravitacionales(
   const setScKgM2 = (v: string) => setScKgM2Raw(v);
   const setSvd    = (v: string) => setSvdRaw(v);
 
-  const inputs: InputsCargasGravitacionales = {
+  const inputs = useMemo<InputsCargasGravitacionales>(() => ({
     AT:     Number(AT),
     cvKgM2: Number(cvKgM2),
     scKgM2: Number(scKgM2),
     Svd:    Number(Svd),
     bw,
     h,
-  };
+  }), [AT, cvKgM2, scKgM2, Svd, bw, h]);
 
-  const errors  = useMemo(() => validarCargasGravitacionales(inputs), [AT, cvKgM2, scKgM2, Svd]);
+  const errors  = useMemo(() => validarCargasGravitacionales(inputs), [inputs]);
   const isValid = Object.keys(errors).length === 0;
 
   const intermedios = useMemo<ResultadosCargasIntermedios | null>(() => {
-    if (!Number(AT) || !Number(cvKgM2) && Number(cvKgM2) !== 0) return null;
+    if (!Number(AT) || (!Number(cvKgM2) && Number(cvKgM2) !== 0)) return null;
     return calcularCargasIntermedias({ AT: Number(AT), cvKgM2: Number(cvKgM2), scKgM2: Number(scKgM2) });
   }, [AT, cvKgM2, scKgM2]);
 
   const resultados = useMemo<ResultadosCargasTabla | null>(() => {
     if (!isValid) return null;
     return calcularCargasGravitacionales(inputs);
-  }, [AT, cvKgM2, scKgM2, Svd, bw, h]);
+  }, [isValid, inputs]);
 
   const getData = () => ({ ...inputs, intermedios, resultados });
 

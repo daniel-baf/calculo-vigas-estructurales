@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { MomentDiagram } from '@/components/charts/MomentDiagram';
 import { SegmentedControl } from '@/components/ui/segmented-control';
+import { FormulaRenderer } from '@/shared/components/FormulaRenderer';
+import { ResultRow } from '@/components/ui/ResultRow';
 import type { DisenoFlexionState } from './useDisenoFlexion';
 
 // ── Subcomponentes ────────────────────────────────────────────────────────────
@@ -56,6 +58,7 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
     M2, setM2,
     PHI_FLEXION,
     BRAZO_J,
+    procesos,
     errors,
   } = props;
 
@@ -73,48 +76,83 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
   const hasValues = !!M1 && !!Mcenter && !!M2;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-xl font-bold tracking-tight text-foreground">
+          Paso 3: Diseño de Flexión
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Verifica la geometría de la viga e ingresa los momentos obtenidos del análisis estructural.
+        </p>
+      </div>
 
       {/* ── Chequeo de sección ──────────────────────────────────── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4 border-b border-primary/10 pb-2">
           Chequeo de Sección
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-          {/* φ flexión */}
-          <div className="flex items-center justify-between rounded-lg bg-muted px-4 py-2.5">
-            <span className="text-sm">Factor φ a flexión</span>
-            <span className="font-mono font-semibold text-sm">{PHI_FLEXION}</span>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* φ flexión */}
+            <ResultRow
+              label="Factor φ a flexión"
+              value={PHI_FLEXION}
+              proceso="\phi = 0.90"
+            />
+
+            {/* Brazo J */}
+            <ResultRow
+              label="Brazo J (asumido)"
+              value={BRAZO_J}
+              highlight
+              proceso={procesos?.brazoJ}
+            />
           </div>
 
-          {/* Chequeo de secciones */}
-          <div className="flex flex-col gap-1 rounded-lg bg-muted px-4 py-2.5">
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-sm">Chequeo de secciones</span>
+          {/* Chequeo de secciones (Geometría) */}
+          <div className="flex flex-col gap-2 rounded-lg bg-muted px-4 py-3 border border-border">
+            <div className="flex items-center justify-between gap-2 border-b border-border pb-2 mb-1">
+              <span className="text-sm font-medium">Chequeo Geométrico (Secciones)</span>
               <span className={cn(
                 'font-mono font-semibold text-sm px-2 py-0.5 rounded',
-                props.chequeo === 'Ok'         ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                props.chequeo === 'No Ok'      ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
-                props.chequeo === 'No chequea' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
-                                           'bg-muted-foreground/20 text-muted-foreground'
+                props.chequeo === 'Ok' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                  props.chequeo === 'No Ok' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                    props.chequeo === 'No chequea' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                      'bg-muted-foreground/20 text-muted-foreground'
               )}>
                 {props.chequeo}
               </span>
             </div>
-            {props.chequeoProceso && (
-              <p className="text-[10px] font-mono text-muted-foreground break-all leading-relaxed">
-                {props.chequeoProceso}
-              </p>
-            )}
+
+            <div className="space-y-4 pt-1">
+              {procesos?.general && (
+                <div className="space-y-1">
+                  <FormulaRenderer formula={procesos.general.formula} className="text-sm font-medium" />
+                  <FormulaRenderer formula={procesos.general.sustitucion} className="text-xs text-muted-foreground" />
+                </div>
+              )}
+              {procesos?.condicion1 && (
+                <div className="space-y-1">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-tight font-semibold">Condición 1: Relación de luz</p>
+                  <FormulaRenderer formula={procesos.condicion1.formula} className="text-sm font-medium" />
+                  <FormulaRenderer formula={procesos.condicion1.sustitucion} className="text-xs text-muted-foreground" />
+                </div>
+              )}
+              {procesos?.condicion2 && (
+                <div className="space-y-1">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-tight font-semibold">Condición 2: Ancho mínimo</p>
+                  <FormulaRenderer formula={procesos.condicion2.formula} className="text-sm font-medium" />
+                  <FormulaRenderer formula={procesos.condicion2.sustitucion} className="text-xs text-muted-foreground" />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="h-px bg-border" />
-
       {/* ── Modo de ingreso ──────────────────────────────────────── */}
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4 border-b border-primary/10 pb-2">
           Momentos de Diseño
         </h3>
 
@@ -123,7 +161,7 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
           <label className="text-sm font-medium">Modo de ingreso</label>
           <SegmentedControl
             options={[
-              { value: 'manual',        label: 'Manual' },
+              { value: 'manual', label: 'Manual' },
               { value: 'combinaciones', label: 'Generar combinaciones' },
             ]}
             value={modoIngreso}
@@ -174,9 +212,8 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
       {/* ── Diagrama de momentos ─────────────────────────────────── */}
       {hasValues && (
         <>
-          <div className="h-px bg-border" />
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-4 border-b border-primary/10 pb-2">
               Diagrama de Momentos
             </h3>
             <div className="rounded-lg border border-border bg-card p-3">
@@ -199,19 +236,6 @@ export function DisenoFlexionStep(props: DisenoFlexionState) {
           </section>
         </>
       )}
-
-      <div className="h-px bg-border" />
-
-      {/* ── Brazo J ──────────────────────────────────────────────── */}
-      <section>
-        <div className="flex items-center justify-between rounded-lg bg-muted px-4 py-2.5">
-          <div>
-            <span className="text-sm font-medium">Brazo J (asumido)</span>
-            <p className="text-xs text-muted-foreground mt-0.5">Quizá se implementen más opciones en el futuro.</p>
-          </div>
-          <span className="font-mono font-semibold text-primary">{BRAZO_J}</span>
-        </div>
-      </section>
     </div>
   );
 }
