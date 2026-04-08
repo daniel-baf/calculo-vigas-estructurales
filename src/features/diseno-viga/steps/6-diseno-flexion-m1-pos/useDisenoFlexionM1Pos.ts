@@ -71,6 +71,7 @@ export function useDisenoFlexionM1Pos({
   const buscarVariantes = () => {
     const res = buscarVariantesM1Pos(
       params,
+      parseFloat(asEtabs) || 0,
       nosPermitidos,
       parseInt(maxVariantes) || 5,
       soloHorizontales

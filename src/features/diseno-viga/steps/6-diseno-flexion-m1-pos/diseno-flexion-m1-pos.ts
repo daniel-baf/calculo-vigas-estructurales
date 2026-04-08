@@ -185,6 +185,7 @@ export function calcularDisenoM1Pos(
  */
 export function buscarVariantesM1Pos(
   params: M1PosParams,
+  asEtabs: number,
   nosPermitidos: number[],
   max: number,
   soloHorizontales: boolean
@@ -213,7 +214,7 @@ export function buscarVariantesM1Pos(
       beta: 0.85,
       bw,
       d,
-      asEtabs: 0,
+      asEtabs,
     },
     {
       nosPermitidos,

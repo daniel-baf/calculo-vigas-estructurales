@@ -16,6 +16,7 @@ import type {
 } from "./diseno-flexion-m1"
 
 export interface DisenoFlexionM1State {
+  asM1Base: number
   asEtabs: string
   setAsEtabs: (v: string) => void
   qty1: string
@@ -51,6 +52,7 @@ export function useDisenoFlexionM1(
   bw: number,
   d: number
 ): DisenoFlexionM1State {
+  const asM1Base = (M1 * 100) / (PHI_FLEXION * fy * BRAZO_J * d)
   const params: UseDisenoRefuerzoParams = {
     momento: M1,
     momentoLabel: "M1",
@@ -66,6 +68,7 @@ export function useDisenoFlexionM1(
   const shared = useDisenoRefuerzo(params)
 
   return {
+    asM1Base,
     ...shared,
     resultado: shared.resultado as unknown as ResultadoDisenoM1 | null,
     errors: shared.errors as unknown as ErroresDisenoM1,

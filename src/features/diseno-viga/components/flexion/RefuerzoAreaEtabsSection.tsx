@@ -2,25 +2,25 @@ import { Sparkles, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { NumericField } from "~/components/flexion/NumericField"
 import { BarSelector } from "~/components/flexion/BarSelector"
-import type { M1PosState } from "../useDisenoFlexionM1Pos"
 
-type Props = Pick<
-  M1PosState,
-  | "asEtabs"
-  | "setAsEtabs"
-  | "soloHorizontales"
-  | "setSoloHorizontales"
-  | "nosPermitidos"
-  | "setNosPermitidos"
-  | "maxVariantes"
-  | "setMaxVariantes"
-  | "buscarVariantes"
-  | "limpiarVariantes"
-  | "variantes"
-  | "errors"
->
+export interface RefuerzoAreaEtabsSectionProps {
+  asEtabs: string
+  setAsEtabs: (v: string) => void
+  soloHorizontales: boolean
+  setSoloHorizontales: (v: boolean) => void
+  nosPermitidos: number[]
+  setNosPermitidos: (nos: number[]) => void
+  maxVariantes: string
+  setMaxVariantes: (v: string) => void
+  buscarVariantes: () => void
+  limpiarVariantes: () => void
+  variantes: unknown[]
+  errors: { asEtabs?: string }
+  label?: string
+  hint?: string
+}
 
-export function AreaEtabsSection(props: Props) {
+export function RefuerzoAreaEtabsSection(props: RefuerzoAreaEtabsSectionProps) {
   const {
     asEtabs,
     setAsEtabs,
@@ -34,21 +34,43 @@ export function AreaEtabsSection(props: Props) {
     limpiarVariantes,
     variantes,
     errors,
+    label = "Área de acero por ETABS/SAP",
+    hint = "Valor de As directamente del análisis",
   } = props
 
   return (
     <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2">
       <NumericField
         id="asEtabs"
-        label="Área de acero por SAP/ETABS"
+        label={label}
         unit="cm²"
         value={asEtabs}
         onChange={setAsEtabs}
         error={errors.asEtabs}
-        hint="Valor de As directamente del análisis sísmico"
+        hint={hint}
       />
 
       <div className="space-y-4">
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium">
+              Números de varilla a considerar
+            </label>
+            <label className="group flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
+                checked={soloHorizontales}
+                onChange={(e) => setSoloHorizontales(e.target.checked)}
+              />
+              <span className="text-xs text-muted-foreground transition-colors group-hover:text-foreground">
+                incluir únicamente horizontales
+              </span>
+            </label>
+          </div>
+          <BarSelector selected={nosPermitidos} onChange={setNosPermitidos} />
+        </div>
+
         <div className="flex items-end gap-4">
           <div className="flex-1">
             <NumericField
@@ -63,6 +85,7 @@ export function AreaEtabsSection(props: Props) {
           <div className="flex gap-2">
             <button
               type="button"
+              disabled={!asEtabs}
               onClick={buscarVariantes}
               className={cn(
                 "flex h-9 items-center justify-center gap-2 rounded-lg bg-primary/10 px-6 text-sm font-bold text-primary transition-all active:scale-[0.98]",
@@ -83,26 +106,6 @@ export function AreaEtabsSection(props: Props) {
               </button>
             )}
           </div>
-        </div>
-
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium">
-              Números de varilla a considerar
-            </label>
-            <label className="group flex cursor-pointer items-center gap-2">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
-                checked={soloHorizontales}
-                onChange={(e) => setSoloHorizontales(e.target.checked)}
-              />
-              <span className="text-xs text-muted-foreground transition-colors group-hover:text-foreground">
-                incluir unicamente horizontales
-              </span>
-            </label>
-          </div>
-          <BarSelector selected={nosPermitidos} onChange={setNosPermitidos} />
         </div>
       </div>
     </div>

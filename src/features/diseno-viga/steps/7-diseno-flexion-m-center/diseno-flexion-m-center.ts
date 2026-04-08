@@ -1,8 +1,6 @@
 /**
- * DOMAIN LAYER — Diseño a Flexión para M1(−) Lado Izquierdo
+ * DOMAIN LAYER — Diseño a Flexión para Momento en el Centro de la Viga M(+)
  * Módulo: Diseño de Viga (DI) — Viga de Techo
- *
- * Re-exporta tipos y funciones genéricas del shared module.
  */
 
 export {
@@ -29,8 +27,8 @@ import { mapRefuerzoResult } from "~/components/flexion/mapRefuerzo"
 
 export type { InputsRefuerzo, ResultadoRefuerzo, FiltroVariantes }
 
-export interface InputsDisenoM1 {
-  M1: number
+export interface InputsDisenoMCentro {
+  Mcenter: number
   phiFlexion: number
   brazoJ: number
   fc: number
@@ -45,8 +43,8 @@ export interface InputsDisenoM1 {
   no2: number
 }
 
-export interface ResultadoDisenoM1 {
-  asM1: number
+export interface ResultadoDisenoMCentro {
+  asMcenter: number
   asPropuesta: number
   chequeoAsEtabs: "Ok" | "No Ok" | "No chequea"
   a: number
@@ -66,7 +64,7 @@ export interface ResultadoDisenoM1 {
     no2: number
   }
   procesos: {
-    asM1: { formula: string; sustitucion: string }
+    asMcenter: { formula: string; sustitucion: string }
     asPropuesta: { formula: string; sustitucion: string }
     a: { formula: string; sustitucion: string }
     phiMn: { formula: string; sustitucion: string }
@@ -78,10 +76,12 @@ export interface ResultadoDisenoM1 {
   }
 }
 
-export function calcularDisenoM1(inp: InputsDisenoM1): ResultadoDisenoM1 {
+export function calcularDisenoMCentro(
+  inp: InputsDisenoMCentro
+): ResultadoDisenoMCentro {
   const res = calcularRefuerzo({
-    momento: inp.M1,
-    momentoLabel: "M1",
+    momento: inp.Mcenter,
+    momentoLabel: "M(+) Centro",
     phiFlexion: inp.phiFlexion,
     brazoJ: inp.brazoJ,
     fc: inp.fc,
@@ -97,8 +97,9 @@ export function calcularDisenoM1(inp: InputsDisenoM1): ResultadoDisenoM1 {
   })
 
   const mapped = mapRefuerzoResult(res)
+
   return {
-    asM1: mapped.asRequerido,
+    asMcenter: mapped.asRequerido,
     asPropuesta: mapped.asPropuesta,
     chequeoAsEtabs: mapped.chequeoAsEtabs,
     a: mapped.a,
@@ -113,7 +114,7 @@ export function calcularDisenoM1(inp: InputsDisenoM1): ResultadoDisenoM1 {
     armadoSuperior: mapped.armadoSuperior,
     inputs: mapped.inputs,
     procesos: {
-      asM1: mapped.procesos.asRequerido,
+      asMcenter: mapped.procesos.asRequerido,
       asPropuesta: mapped.procesos.asPropuesta,
       a: mapped.procesos.a,
       phiMn: mapped.procesos.phiMn,
@@ -126,7 +127,7 @@ export function calcularDisenoM1(inp: InputsDisenoM1): ResultadoDisenoM1 {
   }
 }
 
-export interface ErroresDisenoM1 {
+export interface ErroresDisenoMCentro {
   asEtabs?: string
   qty1?: string
   no1?: string
@@ -134,30 +135,30 @@ export interface ErroresDisenoM1 {
   no2?: string
 }
 
-export interface AlertasDisenoM1 {
+export interface AlertasDisenoMCentro {
   no1Caro?: string
   no2Caro?: string
   diffVarillas?: string
 }
 
-export function validarDisenoM1(inp: Partial<InputsDisenoM1>): {
-  errors: ErroresDisenoM1
-  alertas: AlertasDisenoM1
+export function validarDisenoMCentro(inp: Partial<InputsDisenoMCentro>): {
+  errors: ErroresDisenoMCentro
+  alertas: AlertasDisenoMCentro
 } {
   return validarRefuerzo(inp as Parameters<typeof validarRefuerzo>[0]) as {
-    errors: ErroresDisenoM1
-    alertas: AlertasDisenoM1
+    errors: ErroresDisenoMCentro
+    alertas: AlertasDisenoMCentro
   }
 }
 
-export function generarVariantesM1(
-  inpBase: Omit<InputsDisenoM1, "qty1" | "no1" | "qty2" | "no2">,
+export function generarVariantesMCentro(
+  inpBase: Omit<InputsDisenoMCentro, "qty1" | "no1" | "qty2" | "no2">,
   filtro: FiltroVariantes
-): ResultadoDisenoM1[] {
+): ResultadoDisenoMCentro[] {
   const sharedRes = generarVariantes(
     {
-      momento: inpBase.M1,
-      momentoLabel: "M1",
+      momento: inpBase.Mcenter,
+      momentoLabel: "M(+) Centro",
       phiFlexion: inpBase.phiFlexion,
       brazoJ: inpBase.brazoJ,
       fc: inpBase.fc,
@@ -170,10 +171,10 @@ export function generarVariantesM1(
     filtro
   )
 
-  return sharedRes.map((r): ResultadoDisenoM1 => {
+  return sharedRes.map((r): ResultadoDisenoMCentro => {
     const mapped = mapRefuerzoResult(r)
     return {
-      asM1: mapped.asRequerido,
+      asMcenter: mapped.asRequerido,
       asPropuesta: mapped.asPropuesta,
       chequeoAsEtabs: mapped.chequeoAsEtabs,
       a: mapped.a,
@@ -188,7 +189,7 @@ export function generarVariantesM1(
       armadoSuperior: mapped.armadoSuperior,
       inputs: mapped.inputs,
       procesos: {
-        asM1: mapped.procesos.asRequerido,
+        asMcenter: mapped.procesos.asRequerido,
         asPropuesta: mapped.procesos.asPropuesta,
         a: mapped.procesos.a,
         phiMn: mapped.procesos.phiMn,

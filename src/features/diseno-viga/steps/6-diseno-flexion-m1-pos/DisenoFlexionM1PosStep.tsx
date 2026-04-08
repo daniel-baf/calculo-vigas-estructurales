@@ -1,4 +1,5 @@
 import { StepSection } from "~/components/flexion/StepSection"
+import { AsCalculadoCard } from "~/components/flexion/AsCalculadoCard"
 import type { M1PosState } from "./useDisenoFlexionM1Pos"
 import { AreaEtabsSection } from "./components/AreaEtabsSection"
 import { VariantsSection } from "./components/VariantsSection"
@@ -20,6 +21,13 @@ export function DisenoFlexionM1PosStep(props: M1PosState) {
       </div>
 
       <StepSection title="Acero As_M1(+)">
+        {props.resultado && (
+          <AsCalculadoCard
+            title="Acero As_M1(+) calculado"
+            value={props.resultado.asReq}
+            compareTo={props.resultado.asPropuesta}
+          />
+        )}
         <AreaEtabsSection
           asEtabs={props.asEtabs}
           setAsEtabs={props.setAsEtabs}

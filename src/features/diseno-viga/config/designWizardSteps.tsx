@@ -6,6 +6,7 @@ import type { DisenoFlexionState } from "@/features/diseno-viga/steps/3-diseno-f
 import type { DisenoFlexionM2State } from "@/features/diseno-viga/steps/4-diseno-flexion-m2/useDisenoFlexionM2"
 import type { DisenoFlexionM1State } from "@/features/diseno-viga/steps/5-diseno-flexion-m1/useDisenoFlexionM1"
 import type { M1PosState } from "@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/useDisenoFlexionM1Pos"
+import type { DisenoFlexionMCentroState } from "@/features/diseno-viga/steps/7-diseno-flexion-m-center/useDisenoFlexionMCentro"
 
 const ParametrosBasicosStep = lazy(() =>
   import("@/features/diseno-viga/steps/1-parametros-basicos/ParametrosBasicosStep").then(
@@ -42,6 +43,11 @@ const CortanteResumenStep = lazy(() =>
     (m) => ({ default: m.CortanteResumenStep })
   )
 )
+const DisenoFlexionMCentroStep = lazy(() =>
+  import("@/features/diseno-viga/steps/7-diseno-flexion-m-center/DisenoFlexionMCentroStep").then(
+    (m) => ({ default: m.DisenoFlexionMCentroStep })
+  )
+)
 
 const stepFallback = (
   <div className="py-8 text-center text-sm text-muted-foreground">
@@ -56,6 +62,7 @@ interface CreateDesignWizardStepsProps {
   step4: DisenoFlexionM2State
   step5: DisenoFlexionM1State
   step6: M1PosState
+  step7: DisenoFlexionMCentroState
 }
 
 export function createDesignWizardSteps({
@@ -65,6 +72,7 @@ export function createDesignWizardSteps({
   step4,
   step5,
   step6,
+  step7,
 }: CreateDesignWizardStepsProps) {
   return [
     {
@@ -126,6 +134,16 @@ export function createDesignWizardSteps({
         </Suspense>
       ),
       isValid: step6.isValid,
+    },
+    {
+      id: "diseno-flexion-m-center",
+      title: "M(+) Centro",
+      component: (
+        <Suspense fallback={stepFallback}>
+          <DisenoFlexionMCentroStep {...step7} />
+        </Suspense>
+      ),
+      isValid: step7.isValid,
     },
     {
       id: "cortante-resumen",

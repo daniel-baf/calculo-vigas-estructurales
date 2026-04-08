@@ -25,6 +25,7 @@ import {
   type ResultadoRefuerzo,
   type FiltroVariantes,
 } from "@/shared/diseno-refuerzo"
+import { mapRefuerzoResult } from "~/components/flexion/mapRefuerzo"
 
 export type { InputsRefuerzo, ResultadoRefuerzo, FiltroVariantes }
 
@@ -146,31 +147,32 @@ export function generarVariantesM2(
 }
 
 function mapSharedResult(res: ResultadoRefuerzo): ResultadoDisenoM2 {
+  const mapped = mapRefuerzoResult(res)
   return {
-    asM2: res.asRequerido,
-    asPropuesta: res.asPropuesta,
-    chequeoAsEtabs: res.chequeoAsEtabs,
-    a: res.a,
-    phiMn: res.phiMn,
-    dc: res.dc,
-    chequeo_dc: res.chequeo_dc as "Ok" | "No Ok",
-    asMin: res.asMin,
-    asMax: res.asMax,
-    chequeoAsMinMax: res.chequeoAsMinMax as "Ok" | "No Ok",
-    c: res.c,
-    chequeoSeccionControlada: res.chequeoSeccionControlada as "Ok" | "No Ok",
-    armadoSuperior: res.armadoSuperior,
-    inputs: res.inputs,
+    asM2: mapped.asRequerido,
+    asPropuesta: mapped.asPropuesta,
+    chequeoAsEtabs: mapped.chequeoAsEtabs,
+    a: mapped.a,
+    phiMn: mapped.phiMn,
+    dc: mapped.dc,
+    chequeo_dc: mapped.chequeo_dc,
+    asMin: mapped.asMin,
+    asMax: mapped.asMax,
+    chequeoAsMinMax: mapped.chequeoAsMinMax,
+    c: mapped.c,
+    chequeoSeccionControlada: mapped.chequeoSeccionControlada,
+    armadoSuperior: mapped.armadoSuperior,
+    inputs: mapped.inputs,
     procesos: {
-      asM2: res.procesos.asRequerido,
-      asPropuesta: res.procesos.asPropuesta,
-      a: res.procesos.a,
-      phiMn: res.procesos.phiMn,
-      dc: res.procesos.dc,
-      asMin: res.procesos.asMin,
-      asMax: res.procesos.asMax,
-      c: res.procesos.c,
-      chequeoSeccionControlada: res.procesos.chequeoSeccionControlada,
+      asM2: mapped.procesos.asRequerido,
+      asPropuesta: mapped.procesos.asPropuesta,
+      a: mapped.procesos.a,
+      phiMn: mapped.procesos.phiMn,
+      dc: mapped.procesos.dc,
+      asMin: mapped.procesos.asMin,
+      asMax: mapped.procesos.asMax,
+      c: mapped.procesos.c,
+      chequeoSeccionControlada: mapped.procesos.chequeoSeccionControlada,
     },
-  } as ResultadoDisenoM2
+  }
 }

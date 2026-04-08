@@ -1,8 +1,8 @@
+import type { DisenoFlexionMCentroState } from "../useDisenoFlexionMCentro"
 import { RefuerzoAreaEtabsSection } from "~/components/flexion/RefuerzoAreaEtabsSection"
-import type { DisenoFlexionM2State } from "../useDisenoFlexionM2"
 
 type Props = Pick<
-  DisenoFlexionM2State,
+  DisenoFlexionMCentroState,
   | "asEtabs"
   | "setAsEtabs"
   | "soloHorizontales"
@@ -32,8 +32,8 @@ export function AreaEtabsSection(props: Props) {
       limpiarVariantes={props.limpiarVariantes}
       variantes={props.variantes}
       errors={props.errors}
-      label="Área de acero por ETABS"
-      hint="Valor de As directamente del análisis en ETABS"
+      label="Área de acero por SAP"
+      hint="Valor de As directamente del análisis (momento positivo)"
     />
   )
 }

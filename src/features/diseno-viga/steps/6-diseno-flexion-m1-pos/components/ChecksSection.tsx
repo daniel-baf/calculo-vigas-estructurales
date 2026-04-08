@@ -1,5 +1,3 @@
-import { AlertCircle, CheckCircle2 } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { ResultRow } from "@/components/ui/ResultRow"
 import { fmtNumber } from "~/components/flexion/fmtNumber"
 import type { M1PosState } from "../useDisenoFlexionM1Pos"
@@ -44,39 +42,6 @@ export function ChecksSection({ resultado }: Props) {
         status={resultado.esSeccionControlada ? "ok" : "no ok"}
         proceso={resultado.proceso.seccionControlada}
       />
-
-      <div
-        className={cn(
-          "mt-6 flex items-center gap-4 rounded-xl border p-4 transition-all duration-500",
-          resultado.cumpleDC
-            ? "border-green-500/20 bg-green-500/10 text-green-700"
-            : "border-red-500/20 bg-red-500/10 text-red-700"
-        )}
-      >
-        {resultado.cumpleDC ? (
-          <>
-            <CheckCircle2 className="h-8 w-8 shrink-0" />
-            <div>
-              <p className="font-bold">Diseño Adecuado</p>
-              <p className="text-xs text-balance opacity-80">
-                El refuerzo propuesto cumple con la resistencia requerida y el
-                armado mínimo sísmico.
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <AlertCircle className="h-8 w-8 shrink-0" />
-            <div>
-              <p className="font-bold">Ajustar Refuerzo</p>
-              <p className="text-xs text-balance opacity-80">
-                La capacidad de la sección es insuficiente o no cumple con el
-                acero mínimo.
-              </p>
-            </div>
-          </>
-        )}
-      </div>
     </div>
   )
 }

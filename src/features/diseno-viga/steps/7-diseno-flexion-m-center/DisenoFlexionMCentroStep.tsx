@@ -1,32 +1,30 @@
 import { StepSection } from "~/components/flexion/StepSection"
 import { AsCalculadoCard } from "~/components/flexion/AsCalculadoCard"
-import type { DisenoFlexionM1State } from "./useDisenoFlexionM1"
+import type { DisenoFlexionMCentroState } from "./useDisenoFlexionMCentro"
 import { AreaEtabsSection } from "./components/AreaEtabsSection"
-import { VariantsSection } from "./components/VariantsSection"
-import { ProposedSteelSection } from "./components/ProposedSteelSection"
+import { RefuerzoVariantsSection } from "~/components/flexion/RefuerzoVariantsSection"
+import { RefuerzoProposedSteelSection } from "~/components/flexion/RefuerzoProposedSteelSection"
 import { ResultsSection } from "./components/ResultsSection"
 import { ArmadoSummary } from "./components/ArmadoSummary"
+import type { ResultadoDisenoMCentro } from "./diseno-flexion-m-center"
 
-/**
- * PRESENTATION LAYER — Paso 5: Diseño a Flexión M1(−) Lado Izquierdo.
- */
-export function DisenoFlexionM1Step(props: DisenoFlexionM1State) {
+export function DisenoFlexionMCentroStep(props: DisenoFlexionMCentroState) {
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-xl font-bold tracking-tight text-foreground">
-          Paso 5: Diseño a Flexión para Momento M1(−) Lado Izquierdo
+          Paso 7: Diseño a Flexión para Momento en el Centro de la Viga M(+)
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Diseño del refuerzo longitudinal para el momento negativo en el apoyo
-          izquierdo.
+          Diseño del refuerzo longitudinal para el momento positivo en el centro
+          del claro.
         </p>
       </div>
 
-      <StepSection title="Acero As_M1(−) L. Izquierdo">
+      <StepSection title="Acero As_M(+)">
         <AsCalculadoCard
-          title="Acero As_M1(−) calculado"
-          value={props.asM1Base}
+          title="Acero As_M(+) calculado"
+          value={props.asMcenterBase}
           compareTo={props.resultado?.asPropuesta}
         />
         <AreaEtabsSection
@@ -43,14 +41,19 @@ export function DisenoFlexionM1Step(props: DisenoFlexionM1State) {
           variantes={props.variantes}
           errors={props.errors}
         />
-        <VariantsSection
+        <RefuerzoVariantsSection<ResultadoDisenoMCentro>
           variantes={props.variantes}
           seleccionarVariante={props.seleccionarVariante}
+          getArmado={(v) => v.armadoSuperior}
+          getAs={(v) => v.asPropuesta}
+          getDc={(v) => v.dc}
+          getChequeoDc={(v) => v.chequeo_dc}
+          showHorizWarning={(v) => v.inputs.no2 === 0}
         />
       </StepSection>
 
       <StepSection title="Acero propuesto para momento">
-        <ProposedSteelSection
+        <RefuerzoProposedSteelSection
           qty1={props.qty1}
           setQty1={props.setQty1}
           no1={props.no1}
@@ -73,7 +76,7 @@ export function DisenoFlexionM1Step(props: DisenoFlexionM1State) {
             />
           </StepSection>
           <div className="h-px bg-border" />
-          <StepSection title="Armado superior (L. Izquierdo)">
+          <StepSection title="Armado superior">
             <ArmadoSummary resultado={props.resultado} />
           </StepSection>
         </>

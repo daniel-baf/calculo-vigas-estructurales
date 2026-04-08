@@ -7,6 +7,7 @@ import { useDisenoFlexion } from "@/features/diseno-viga/steps/3-diseno-flexion/
 import { useDisenoFlexionM2 } from "@/features/diseno-viga/steps/4-diseno-flexion-m2/useDisenoFlexionM2"
 import { useDisenoFlexionM1 } from "@/features/diseno-viga/steps/5-diseno-flexion-m1/useDisenoFlexionM1"
 import { useDisenoFlexionM1Pos } from "@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/useDisenoFlexionM1Pos"
+import { useDisenoFlexionMCentro } from "@/features/diseno-viga/steps/7-diseno-flexion-m-center/useDisenoFlexionMCentro"
 
 import { ChecksBanner } from "@/components/ui/ChecksBanner"
 import { Wizard } from "@/components/wizard/Wizard"
@@ -53,6 +54,15 @@ export function DesignWizard() {
     asMin: step5.asMin,
   })
 
+  const step7 = useDisenoFlexionMCentro(
+    Number(step3.Mcenter),
+    step1.fc,
+    step1.fy,
+    step1.beta ?? 0.85,
+    step1.bw,
+    step1.d
+  )
+
   const showBanner = useMemo(() => {
     if (currentIdx === 2) {
       const filled = !!step3.M1 && !!step3.Mcenter && !!step3.M2
@@ -79,8 +89,17 @@ export function DesignWizard() {
     if (currentIdx === 5) {
       return !!step6.resultado && !step6.resultado.cumpleDC
     }
+    if (currentIdx === 6) {
+      const filled = !!step7.asEtabs && !!step7.qty1 && !!step7.no1
+      const allChecksOk =
+        step7.resultado?.chequeoAsEtabs === "Ok" &&
+        step7.resultado?.chequeo_dc === "Ok" &&
+        step7.resultado?.chequeoAsMinMax === "Ok" &&
+        step7.resultado?.chequeoSeccionControlada === "Ok"
+      return filled && !allChecksOk
+    }
     return false
-  }, [currentIdx, step3, step4, step5, step6])
+  }, [currentIdx, step3, step4, step5, step6, step7])
 
   const steps = createDesignWizardSteps({
     step1,
@@ -89,6 +108,7 @@ export function DesignWizard() {
     step4,
     step5,
     step6,
+    step7,
   })
 
   useEffect(() => {
@@ -108,12 +128,12 @@ export function DesignWizard() {
       if (e.key.toLowerCase() !== "a") return
 
       e.preventDefault()
-      applyDesignWizardMock({ step1, step2, step3, step4, step5, step6 })
+      applyDesignWizardMock({ step1, step2, step3, step4, step5, step6, step7 })
     }
 
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [step1, step2, step3, step4, step5, step6])
+  }, [step1, step2, step3, step4, step5, step6, step7])
 
   return (
     <>
@@ -130,7 +150,15 @@ export function DesignWizard() {
           className="border border-border shadow-lg dark:bg-card/90 dark:hover:bg-card"
           title="Ctrl + A"
           onClick={() =>
-            applyDesignWizardMock({ step1, step2, step3, step4, step5, step6 })
+            applyDesignWizardMock({
+              step1,
+              step2,
+              step3,
+              step4,
+              step5,
+              step6,
+              step7,
+            })
           }
         >
           🧪 Autollenar Mock
