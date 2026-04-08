@@ -1,0 +1,1831 @@
+{
+  "workbook": "MC-MODULO A.xlsx",
+  "sheet": "V4",
+  "observacion": "En la hoja V4 se identifican 4 grupos principales visibles en el Excel (aunque tu mensaje menciona 3): MC- DISEÑO DE VIGA (DI)-VIGA DE TECHO, DISEÑO A CORTE, ZONA CONFINADA y RESUMEN FINAL DE VIGA.",
+  "estructura": "grupo -> paso -> variables",
+  "grupos": {
+    "mc_diseno_de_viga_di_viga_de_techo": {
+      "title": "MC- DISEÑO DE VIGA (DI)-VIGA DE TECHO",
+      "steps": {
+        "datos_generales": {
+          "title": "DATOS GENERALES",
+          "variables": {
+            "resistencia_del_concreto_fc": {
+              "cell": "D9",
+              "label": "Resistencia del concreto f'c",
+              "is_input": true,
+              "unit": "kgf/cm2",
+              "value": 280
+            },
+            "resistencia_del_acero_fy": {
+              "cell": "D10",
+              "label": "Resistencia del acero Fy",
+              "is_input": true,
+              "unit": "kgf/cm2",
+              "value": 4200
+            },
+            "factor_beta": {
+              "cell": "D11",
+              "label": "Factor β",
+              "is_input": false,
+              "formula_excel": "=IF(AND(D9>=175.76,D9<=281.228),0.85,IF(AND(D9>281.228,D9<562.45),(0.85-((0.05*D9-210)/1000)),IF(D9>=562.45,0.65)))",
+              "formula_json": "=IF(AND(mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc>=175.76,mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc<=281.228),0.85,IF(AND(mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc>281.228,mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc<562.45),(0.85-((0.05*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc-210)/1000)),IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc>=562.45,0.65)))"
+            },
+            "tipo_de_concreto_hidraulico_lambda": {
+              "cell": "D12",
+              "label": "Tipo de concreto hidraulico λ",
+              "is_input": true,
+              "value": 1
+            },
+            "portico": {
+              "cell": "D13",
+              "label": "Portico ",
+              "is_input": true,
+              "unit": " - ",
+              "value": "P.E"
+            },
+            "ancho_de_la_viga_bw": {
+              "cell": "D14",
+              "label": "Ancho de la viga (bw) ",
+              "is_input": true,
+              "unit": "cm ",
+              "value": 25
+            },
+            "alatura_de_la_viga_h": {
+              "cell": "D15",
+              "label": "Alatura de la viga (h) ",
+              "is_input": true,
+              "unit": "cm ",
+              "value": 40
+            },
+            "recubrimiento_rec": {
+              "cell": "D16",
+              "label": "Recubrimiento (rec) ",
+              "is_input": true,
+              "unit": "cm ",
+              "value": 4
+            },
+            "peralte_efectivo_d": {
+              "cell": "D17",
+              "label": "Peralte efectivo (d) ",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=D15-D16",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.datos_generales.alatura_de_la_viga_h-mc_diseno_de_viga_di_viga_de_techo.datos_generales.recubrimiento_rec"
+            },
+            "luz_entre_apoyos_l": {
+              "cell": "D18",
+              "label": "Luz entre apoyos (L) ",
+              "is_input": true,
+              "unit": "m ",
+              "value": 6.05
+            }
+          }
+        },
+        "cargas_gravitacionales": {
+          "title": "CARGAS GRAVITACIONALES",
+          "variables": {
+            "carga_viva_cv": {
+              "cell": "D21",
+              "label": "Carga viva (CV) ",
+              "is_input": false,
+              "unit": "kgf/m",
+              "formula_excel": "=+I21",
+              "formula_json": "=+I21"
+            },
+            "carga_muerta_cm": {
+              "cell": "D22",
+              "label": "Carga Muerta (CM)",
+              "is_input": false,
+              "unit": "kgf/m",
+              "formula_excel": "=2400*(D14*D15/(100*100))+I23",
+              "formula_json": "=2400*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw*mc_diseno_de_viga_di_viga_de_techo.datos_generales.alatura_de_la_viga_h/(100*100))+I23"
+            },
+            "sismo_vertical_svd": {
+              "cell": "D23",
+              "label": "Sismo vertical Svd",
+              "is_input": false,
+              "unit": " - ",
+              "formula_excel": "='CS E1 '!D50",
+              "formula_json": "=CS E1 !D50"
+            },
+            "carga_mayorada_wu": {
+              "cell": "D24",
+              "label": "Carga mayorada (Wu)",
+              "is_input": false,
+              "unit": "kgf/m ",
+              "formula_excel": "=(1.2+D23)*D22+D21",
+              "formula_json": "=(1.2+mc_diseno_de_viga_di_viga_de_techo.cargas_gravitacionales.sismo_vertical_svd)*mc_diseno_de_viga_di_viga_de_techo.cargas_gravitacionales.carga_muerta_cm+mc_diseno_de_viga_di_viga_de_techo.cargas_gravitacionales.carga_viva_cv"
+            }
+          }
+        },
+        "diseno_a_flexion_base": {
+          "title": "DISEÑO A FLEXION",
+          "variables": {
+            "factor_fhi_a_flexion_phi": {
+              "cell": "D27",
+              "label": "Factor fhi a flexión ϕ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 0.9
+            },
+            "chequeo_de_secciones": {
+              "cell": "D28",
+              "label": "Chequeo de secciones ",
+              "is_input": false,
+              "formula_excel": "=IF(D13=\"P.I\",\"Ok\",IF(D13=\"P.E\",IF(AND(D18*100>=4*D17,D14>=MAX(0.3*D15,25)),\"Ok\",\"No Ok\")))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.I\",\"Ok\",IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.E\",IF(AND(mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l*100>=4*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d,mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw>=MAX(0.3*mc_diseno_de_viga_di_viga_de_techo.datos_generales.alatura_de_la_viga_h,25)),\"Ok\",\"No Ok\")))"
+            },
+            "momento_lado_izquierdo_m1": {
+              "cell": "D29",
+              "label": "Momento lado Izquierdo  M1(-) ",
+              "is_input": true,
+              "unit": "kgf-m",
+              "value": 8231.96
+            },
+            "momento_en_el_centro_de_la_viga_mas": {
+              "cell": "D30",
+              "label": "Momento en el centro de la viga (+)",
+              "is_input": true,
+              "unit": "kgf-m",
+              "value": 4304.52
+            },
+            "momento_lado_derecho_m2": {
+              "cell": "D31",
+              "label": "Momento lado derecho M2(-) ",
+              "is_input": true,
+              "unit": "kgf-m",
+              "value": 8221.33
+            },
+            "brazo_j_asumido": {
+              "cell": "D32",
+              "label": "Brazo J (asumido) ",
+              "is_input": true,
+              "value": 0.9
+            },
+            "b1": {
+              "cell": "H54",
+              "label": "b1",
+              "is_input": false,
+              "formula_excel": "=+D11",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.datos_generales.factor_beta"
+            },
+            "cuantia_balance": {
+              "cell": "H55",
+              "label": "cuantia_balance",
+              "is_input": false,
+              "formula_excel": "=((0.85*H54*D9)/D10)*(6090/(6090+D10))",
+              "formula_json": "=((0.85*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.b1*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc)/mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)*(6090/(6090+mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy))"
+            },
+            "as_maximo_balanceado": {
+              "cell": "H56",
+              "label": "as_maximo_balanceado",
+              "is_input": false,
+              "formula_excel": "=+H55*0.5*D14*D17",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.cuantia_balance*0.5*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d"
+            },
+            "as_maximo_0_33": {
+              "cell": "H58",
+              "label": "as_maximo_0_33",
+              "is_input": true,
+              "value": "0.33As maximo "
+            }
+          }
+        },
+        "diseno_a_flexion_para_momento_m2_neg_lado_derecho": {
+          "title": "DISEÑO A FLEXION PARA MOMENTO M2(-) L. DERECHO",
+          "variables": {
+            "acero_as_m2": {
+              "cell": "D50",
+              "label": "Acero As_M2(-)",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D31*100)/(D27*$D$10*D32*D17)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.momento_lado_derecho_m2*100)/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.brazo_j_asumido*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "acero_propuesto_para_momento": {
+              "cell": "D51",
+              "label": "Acero propuesto para momento ",
+              "is_input": true,
+              "value": null
+            },
+            "cantidad_de_varillas": {
+              "cell": "D52",
+              "label": "Cantidad de varillas",
+              "is_input": true,
+              "unit": " - ",
+              "value": 2
+            },
+            "no_de_varilla": {
+              "cell": "D53",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 6
+            },
+            "area_de_la_varilla": {
+              "cell": "D54",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D53,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.no_de_varilla,Tabla39[#All],2,)"
+            },
+            "cantidad_de_varillas_2": {
+              "cell": "D55",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 1
+            },
+            "no_de_varilla_2": {
+              "cell": "D56",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla_2": {
+              "cell": "D57",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D56,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.no_de_varilla_2,Tabla39[#All],2,)"
+            },
+            "area_de_acero_propuesta_as": {
+              "cell": "D58",
+              "label": "Area de acero propuesta As",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D52*D54)+(D55*D57)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.area_de_la_varilla)+(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.cantidad_de_varillas_2*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.area_de_la_varilla_2)"
+            },
+            "area_de_acero_por_etabs": {
+              "cell": "D59",
+              "label": "Area de acero por ETABS",
+              "is_input": true,
+              "unit": "cm2",
+              "value": 6.63
+            },
+            "a": {
+              "cell": "D60",
+              "label": "a: ",
+              "is_input": false,
+              "formula_excel": "=(D58*$D$10)/(0.85*$D$9*D14)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "momento_nominal_phimn": {
+              "cell": "D61",
+              "label": "Momento nominal ϕMn",
+              "is_input": false,
+              "unit": "kgf-m",
+              "formula_excel": "=D27*D58*$D$10*(D17-D60/2)/100",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.a/2)/100"
+            },
+            "d_c": {
+              "cell": "D62",
+              "label": "D/C",
+              "is_input": false,
+              "unit": "=IF(D62<=1,\"Ok\",\"No ok\")",
+              "formula_excel": "=D31/D61",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.momento_lado_derecho_m2/mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.momento_nominal_phimn"
+            },
+            "acero_minimo_a_flexion_as_min": {
+              "cell": "D63",
+              "label": "Acero minimo a flexion As min",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=MAX(0.8*SQRT($D$9)*D14*D17/$D$10,14*D14*D17/$D$10)",
+              "formula_json": "=MAX(0.8*SQRT(mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc)*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d/mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy,14*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d/mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)"
+            },
+            "acero_maximo_a_flexion_as_max": {
+              "cell": "D64",
+              "label": "Acero maximo a flexion As max",
+              "is_input": false,
+              "unit": "=IF(AND(D63<=D58,D58<=D64),\"Ok\",\"No ok\")",
+              "formula_excel": "=0.025*D14*D17",
+              "formula_json": "=0.025*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d"
+            },
+            "c_a_b1": {
+              "cell": "D65",
+              "label": "c=a/B1",
+              "is_input": false,
+              "unit": " - ",
+              "formula_excel": "=D60/$D$11",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.a/mc_diseno_de_viga_di_viga_de_techo.datos_generales.factor_beta"
+            },
+            "chequeo_por_seccion_controlada": {
+              "cell": "D66",
+              "label": "Chequeo por seccion controlada ",
+              "is_input": false,
+              "formula_excel": "=IF(D65<0.375*D17,\"Ok\",\"No ok\")",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.c_a_b1<0.375*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d,\"Ok\",\"No ok\")"
+            },
+            "armado_superior": {
+              "cell": "D67",
+              "label": "Armado superior ",
+              "is_input": false,
+              "formula_excel": "=IF(D55=0,CONCATENATE(D52,\"No.\",D53,),CONCATENATE(D52,\"No.\",D53,\"+\",D55,\"No.\",D56))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.cantidad_de_varillas_2=0,CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.no_de_varilla,),CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.no_de_varilla,\"+\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.cantidad_de_varillas_2,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.no_de_varilla_2))"
+            },
+            "diametro_varilla_capa_1": {
+              "cell": "H52",
+              "label": "diametro_varilla_capa_1",
+              "is_input": false,
+              "formula_excel": "=VLOOKUP(D53,Tabla39[#All],3,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.no_de_varilla,Tabla39[#All],3,)"
+            },
+            "separacion_libre_capa_1": {
+              "cell": "I52",
+              "label": "separacion_libre_capa_1",
+              "is_input": false,
+              "formula_excel": "=($D$14-(2*$D$16)-(D52*H52))/(D52-1)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw-(2*mc_diseno_de_viga_di_viga_de_techo.datos_generales.recubrimiento_rec)-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.diametro_varilla_capa_1))/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.cantidad_de_varillas-1)"
+            },
+            "separacion_centro_capa_1": {
+              "cell": "J52",
+              "label": "separacion_centro_capa_1",
+              "is_input": false,
+              "formula_excel": "=+I52+H52",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.separacion_libre_capa_1+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.diametro_varilla_capa_1"
+            },
+            "chequeo_separacion_capa_1": {
+              "cell": "K52",
+              "label": "chequeo_separacion_capa_1",
+              "is_input": false,
+              "formula_excel": "=+IF(J52<=35,\"Ok\",\"disminuir separcion\")",
+              "formula_json": "=+IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.separacion_centro_capa_1<=35,\"Ok\",\"disminuir separcion\")"
+            },
+            "momento_resistente_maximo_puentes": {
+              "cell": "H64",
+              "label": "momento_resistente_maximo_puentes",
+              "is_input": false,
+              "formula_excel": "=0.9*D64*D10*(D17-(D10*D64)/(1.7*D9*D14))/100",
+              "formula_json": "=0.9*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_maximo_a_flexion_as_max*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_maximo_a_flexion_as_max)/(1.7*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw))/100"
+            },
+            "momento_faltante_puentes": {
+              "cell": "H65",
+              "label": "momento_faltante_puentes",
+              "is_input": false,
+              "formula_excel": "=-H64+D30",
+              "formula_json": "=-mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.momento_resistente_maximo_puentes+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.momento_en_el_centro_de_la_viga_mas"
+            },
+            "acero_faltante_puentes": {
+              "cell": "H66",
+              "label": "acero_faltante_puentes",
+              "is_input": false,
+              "formula_excel": "=H65*100/(0.9*D17*D10)",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.momento_faltante_puentes*100/(0.9*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)"
+            },
+            "acero_total_puente": {
+              "cell": "H67",
+              "label": "acero_total_puente",
+              "is_input": false,
+              "formula_excel": "=+H66+D64",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_faltante_puentes+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_maximo_a_flexion_as_max"
+            }
+          }
+        },
+        "diseno_a_flexion_para_momento_m1_neg_lado_izquierdo": {
+          "title": "DISEÑO A FLEXION PARA MOMENTO M1(-) L. IZQUIERDO",
+          "variables": {
+            "acero_as_m1": {
+              "cell": "D70",
+              "label": "Acero As_M1(-)",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D29*100)/(D27*$D$10*D32*D17)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.momento_lado_izquierdo_m1*100)/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.brazo_j_asumido*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "acero_propuesto_para_momento": {
+              "cell": "D71",
+              "label": "Acero propuesto para momento ",
+              "is_input": true,
+              "value": null
+            },
+            "cantidad_de_varillas": {
+              "cell": "D72",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 2
+            },
+            "no_de_varilla": {
+              "cell": "D73",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 6
+            },
+            "area_de_la_varilla": {
+              "cell": "D74",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D73,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.no_de_varilla,Tabla39[#All],2,)"
+            },
+            "cantidad_de_varillas_2": {
+              "cell": "D75",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 1
+            },
+            "no_de_varilla_2": {
+              "cell": "D76",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla_2": {
+              "cell": "D77",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D76,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.no_de_varilla_2,Tabla39[#All],2,)"
+            },
+            "area_de_acero_propuesta_as": {
+              "cell": "D78",
+              "label": "Area de acero propuesta As",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D72*D74)+(D75*D77)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.area_de_la_varilla)+(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.cantidad_de_varillas_2*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.area_de_la_varilla_2)"
+            },
+            "area_de_acero_por_sap": {
+              "cell": "D79",
+              "label": "Area de acero por SAP ",
+              "is_input": true,
+              "unit": "cm2",
+              "value": 6.65
+            },
+            "a": {
+              "cell": "D80",
+              "label": "a: ",
+              "is_input": false,
+              "formula_excel": "=(D78*$D$10)/(0.85*$D$9*D14)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "momento_nominal_phimn": {
+              "cell": "D81",
+              "label": "Momento nominal ϕMn",
+              "is_input": false,
+              "unit": "kgf-m",
+              "formula_excel": "=D27*D78*$D$10*(D17-(D80/2))/100",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.a/2))/100"
+            },
+            "d_c": {
+              "cell": "D82",
+              "label": "D/C",
+              "is_input": false,
+              "unit": "=IF(D82<=1,\"Ok\",\"No ok\")",
+              "formula_excel": "=D29/D81",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.momento_lado_izquierdo_m1/mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.momento_nominal_phimn"
+            },
+            "acero_minimo_a_flexion_as_min": {
+              "cell": "D83",
+              "label": "Acero minimo a flexion As min",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=D63",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_minimo_a_flexion_as_min"
+            },
+            "acero_maximo_a_flexion_as_max": {
+              "cell": "D84",
+              "label": "Acero maximo a flexion As max",
+              "is_input": false,
+              "unit": "=IF(AND(D83<=D78,D78<=D84),\"Ok\",\"No ok\")",
+              "formula_excel": "=D64",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_maximo_a_flexion_as_max"
+            },
+            "c_a_b1": {
+              "cell": "D85",
+              "label": "c=a/B1",
+              "is_input": false,
+              "unit": " - ",
+              "formula_excel": "=D80/$D$11",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.a/mc_diseno_de_viga_di_viga_de_techo.datos_generales.factor_beta"
+            },
+            "chequeo_por_seccion_controlada": {
+              "cell": "D86",
+              "label": "Chequeo por seccion controlada ",
+              "is_input": false,
+              "formula_excel": "=IF(D85<0.375*D17,\"Ok\",\"No ok\")",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.c_a_b1<0.375*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d,\"Ok\",\"No ok\")"
+            },
+            "armado_superior": {
+              "cell": "D87",
+              "label": "Armado superior ",
+              "is_input": false,
+              "formula_excel": "=IF(D75=0,CONCATENATE(D72,\"No.\",D73),CONCATENATE(D72,\"No.\",D73,\"+\",D75,\"No.\",D76))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.cantidad_de_varillas_2=0,CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.no_de_varilla),CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.no_de_varilla,\"+\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.cantidad_de_varillas_2,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.no_de_varilla_2))"
+            },
+            "diametro_varilla_capa_1": {
+              "cell": "H72",
+              "label": "diametro_varilla_capa_1",
+              "is_input": false,
+              "formula_excel": "=#ref!",
+              "formula_json": "=#ref!"
+            },
+            "separacion_libre_capa_1": {
+              "cell": "I72",
+              "label": "separacion_libre_capa_1",
+              "is_input": false,
+              "formula_excel": "=($D$14-(2*$D$16)-(D72*H72))/(D72-1)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw-(2*mc_diseno_de_viga_di_viga_de_techo.datos_generales.recubrimiento_rec)-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.diametro_varilla_capa_1))/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.cantidad_de_varillas-1)"
+            },
+            "separacion_centro_capa_1": {
+              "cell": "J72",
+              "label": "separacion_centro_capa_1",
+              "is_input": false,
+              "formula_excel": "=+I72+H72",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.separacion_libre_capa_1+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.diametro_varilla_capa_1"
+            },
+            "chequeo_separacion_capa_1": {
+              "cell": "K72",
+              "label": "chequeo_separacion_capa_1",
+              "is_input": false,
+              "formula_excel": "=+IF(J72<=35,\"Ok\",\"disminuir separcion\")",
+              "formula_json": "=+IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.separacion_centro_capa_1<=35,\"Ok\",\"disminuir separcion\")"
+            }
+          }
+        },
+        "diseno_a_flexion_para_momento_m1_pos_lado_izquierdo": {
+          "title": "DISEÑO A FLEXION PARA MOMENTO M1(+) L. IZUIERDO",
+          "variables": {
+            "momento_positivo_m1_mas": {
+              "cell": "D90",
+              "label": "Momento positivo M1(+) ",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=IF(D13=\"P.E\",0.5*D81,IF(D13=\"P.I\",D81/3))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.E\",0.5*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.momento_nominal_phimn,IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.I\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.momento_nominal_phimn/3))"
+            },
+            "acero_as_m1_mas": {
+              "cell": "D91",
+              "label": "Acero As_M1(+)",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D90*100)/(D27*$D$10*D32*D17)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.momento_positivo_m1_mas*100)/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.brazo_j_asumido*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "acero_propuesto_para_momento": {
+              "cell": "D92",
+              "label": "Acero propuesto para momento ",
+              "is_input": true,
+              "value": null
+            },
+            "cantidad_de_varillas": {
+              "cell": "D93",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 3
+            },
+            "no_de_varilla": {
+              "cell": "D94",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla": {
+              "cell": "D95",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D94,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.no_de_varilla,Tabla39[#All],2,)"
+            },
+            "cantidad_de_varillas_2": {
+              "cell": "D96",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 0
+            },
+            "no_de_varilla_2": {
+              "cell": "D97",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla_2": {
+              "cell": "D98",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D97,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.no_de_varilla_2,Tabla39[#All],2,)"
+            },
+            "area_de_acero_propuesta_as": {
+              "cell": "D99",
+              "label": "Area de acero propuesta As",
+              "is_input": false,
+              "unit": "cm2 ",
+              "formula_excel": "=(D93*D95)+(D96*D98)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.area_de_la_varilla)+(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas_2*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.area_de_la_varilla_2)"
+            },
+            "area_de_acero_por_sap": {
+              "cell": "D100",
+              "label": "Area de acero por SAP ",
+              "is_input": true,
+              "unit": "cm2",
+              "value": 3.18
+            },
+            "a": {
+              "cell": "D101",
+              "label": "a: ",
+              "is_input": false,
+              "unit": " - ",
+              "formula_excel": "=(D99*$D$10)/(0.85*$D$9*D14)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "momento_nominal_phimn": {
+              "cell": "D102",
+              "label": "Momento nominal ϕMn",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=D27*D99*$D$10*(D17-(D101/2))/100",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.a/2))/100"
+            },
+            "d_c": {
+              "cell": "D103",
+              "label": "D/C",
+              "is_input": false,
+              "unit": "=IF(AND(D103<=1,D83<=D99),\"Ok\",\"No ok\")",
+              "formula_excel": "=D90/D102",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.momento_positivo_m1_mas/mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.momento_nominal_phimn"
+            },
+            "armado_superior": {
+              "cell": "D104",
+              "label": "Armado superior ",
+              "is_input": false,
+              "formula_excel": "=IF(D96=0,CONCATENATE(D93,\"No.\",D94),CONCATENATE(D93,\"No.\",D94,\"+\",D96,\"No.\",D97))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas_2=0,CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.no_de_varilla),CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.no_de_varilla,\"+\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas_2,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.no_de_varilla_2))"
+            },
+            "diametro_varilla_capa_1": {
+              "cell": "H93",
+              "label": "diametro_varilla_capa_1",
+              "is_input": false,
+              "formula_excel": "=VLOOKUP(D94,Tabla39[#All],3,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.no_de_varilla,Tabla39[#All],3,)"
+            },
+            "separacion_libre_capa_1": {
+              "cell": "I93",
+              "label": "separacion_libre_capa_1",
+              "is_input": false,
+              "formula_excel": "=($D$14-(2*$D$16)-(D93*H93/3))/(D93-1)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw-(2*mc_diseno_de_viga_di_viga_de_techo.datos_generales.recubrimiento_rec)-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.diametro_varilla_capa_1/3))/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas-1)"
+            },
+            "separacion_centro_capa_1": {
+              "cell": "J93",
+              "label": "separacion_centro_capa_1",
+              "is_input": false,
+              "formula_excel": "=+I93+H93",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.separacion_libre_capa_1+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.diametro_varilla_capa_1"
+            },
+            "chequeo_separacion_capa_1": {
+              "cell": "K93",
+              "label": "chequeo_separacion_capa_1",
+              "is_input": false,
+              "formula_excel": "=+IF(J93<=35,\"Ok\",\"disminuir separcion\")",
+              "formula_json": "=+IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.separacion_centro_capa_1<=35,\"Ok\",\"disminuir separcion\")"
+            },
+            "diametro_varilla_capa_2": {
+              "cell": "H94",
+              "label": "diametro_varilla_capa_2",
+              "is_input": false,
+              "formula_excel": "=VLOOKUP(D94,Tabla39[#All],3,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.no_de_varilla,Tabla39[#All],3,)"
+            },
+            "separacion_libre_capa_2": {
+              "cell": "I94",
+              "label": "separacion_libre_capa_2",
+              "is_input": false,
+              "formula_excel": "=($D$14-(2*$D$16)-(D93*H94/3))/(D93-1)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw-(2*mc_diseno_de_viga_di_viga_de_techo.datos_generales.recubrimiento_rec)-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.diametro_varilla_capa_2/3))/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.cantidad_de_varillas-1)"
+            },
+            "separacion_centro_capa_2": {
+              "cell": "J94",
+              "label": "separacion_centro_capa_2",
+              "is_input": false,
+              "formula_excel": "=+I94+H94",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.separacion_libre_capa_2+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.diametro_varilla_capa_2"
+            },
+            "chequeo_separacion_capa_2": {
+              "cell": "K94",
+              "label": "chequeo_separacion_capa_2",
+              "is_input": false,
+              "formula_excel": "=+IF(J94<=35,\"Ok\",\"disminuir separcion\")",
+              "formula_json": "=+IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.separacion_centro_capa_2<=35,\"Ok\",\"disminuir separcion\")"
+            }
+          }
+        },
+        "diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos": {
+          "title": "DISEÑO A FLEXION PARA MOMENTO EN EL CENTRO DE LA VIGA M(+)",
+          "variables": {
+            "acero_as_m_mas": {
+              "cell": "D107",
+              "label": "Acero As_M(+)",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D30*100)/(D27*$D$10*D32*D17)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.momento_en_el_centro_de_la_viga_mas*100)/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.brazo_j_asumido*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "acero_propuesto_para_momento": {
+              "cell": "D108",
+              "label": "Acero propuesto para momento ",
+              "is_input": true,
+              "value": null
+            },
+            "cantidad_de_varillas": {
+              "cell": "D109",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 3
+            },
+            "no_de_varilla": {
+              "cell": "D110",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla": {
+              "cell": "D111",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D110,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.no_de_varilla,Tabla39[#All],2,)"
+            },
+            "cantidad_de_varillas_2": {
+              "cell": "D112",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 0
+            },
+            "no_de_varilla_2": {
+              "cell": "D113",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla_2": {
+              "cell": "D114",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D113,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.no_de_varilla_2,Tabla39[#All],2,)"
+            },
+            "area_de_acero_propuesta_as": {
+              "cell": "D115",
+              "label": "Area de acero propuesta As",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D109*D111)+(D112*D114)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.area_de_la_varilla)+(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas_2*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.area_de_la_varilla_2)"
+            },
+            "area_de_acero_por_sap": {
+              "cell": "D116",
+              "label": "Area de acero por SAP ",
+              "is_input": true,
+              "unit": "cm2",
+              "value": 3.31
+            },
+            "a": {
+              "cell": "D117",
+              "label": "a: ",
+              "is_input": false,
+              "formula_excel": "=(D115*$D$10)/(0.85*$D$9*D14)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "momento_nominal_phimn": {
+              "cell": "D118",
+              "label": "Momento nominal ϕMn",
+              "is_input": false,
+              "formula_excel": "=D27*D115*$D$10*(D17-(D117/2))/100",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.a/2))/100"
+            },
+            "d_c": {
+              "cell": "D119",
+              "label": "D/C",
+              "is_input": false,
+              "unit": "=IF(D119<=1,\"Ok\",\"No ok\")",
+              "formula_excel": "=D30/D118",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.momento_en_el_centro_de_la_viga_mas/mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.momento_nominal_phimn"
+            },
+            "acero_minimo_a_flexion_as_min": {
+              "cell": "D120",
+              "label": "Acero minimo a flexion As min",
+              "is_input": false,
+              "formula_excel": "=D63",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_minimo_a_flexion_as_min"
+            },
+            "acero_maximo_a_flexion_as_max": {
+              "cell": "D121",
+              "label": "Acero maximo a flexion As max",
+              "is_input": false,
+              "unit": "=IF(AND(D120<=D115,D115<=D121),\"Ok\",\"No ok\")",
+              "formula_excel": "=D64",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_maximo_a_flexion_as_max"
+            },
+            "nota_en_puentes_no_existe_acero_maximo": {
+              "cell": "D122",
+              "label": "Nota en puentes no existe acero maximo ",
+              "is_input": true,
+              "value": null
+            },
+            "recalculado_acero_necesario_solo_en_puentes": {
+              "cell": "D123",
+              "label": "Recalculado acero necesario (SOLO EN PUENTES) ",
+              "is_input": true,
+              "value": null
+            },
+            "momento_resistente_maximo_m_as_max": {
+              "cell": "D124",
+              "label": "Momento resistente maximo (M As max) ",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=H64",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.momento_resistente_maximo_puentes"
+            },
+            "momento_faltante_para_puentes_m": {
+              "cell": "D125",
+              "label": "Momento faltante para puentes M",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=H65",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.momento_faltante_puentes"
+            },
+            "acero_faltante_as_falt": {
+              "cell": "D126",
+              "label": "Acero faltante (As falt)",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=H66",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_faltante_puentes"
+            },
+            "acero_total_para_el_puente": {
+              "cell": "D127",
+              "label": "Acero total para el puente ",
+              "is_input": false,
+              "unit": "=+IF(D115>=D127,\"Ok\",\"no ok\")",
+              "formula_excel": "=H67",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_total_puente"
+            },
+            "c_a_b1": {
+              "cell": "D128",
+              "label": "c=a/B1",
+              "is_input": false,
+              "unit": " - ",
+              "formula_excel": "=D117/$D$11",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.a/mc_diseno_de_viga_di_viga_de_techo.datos_generales.factor_beta"
+            },
+            "chequeo_por_seccion_controlada": {
+              "cell": "D129",
+              "label": "Chequeo por seccion controlada ",
+              "is_input": false,
+              "formula_excel": "=IF(D128<0.375*D17,\"Ok\",\"No ok\")",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.c_a_b1<0.375*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d,\"Ok\",\"No ok\")"
+            },
+            "armado_superior": {
+              "cell": "D130",
+              "label": "Armado superior ",
+              "is_input": false,
+              "formula_excel": "=IF(D112=0,CONCATENATE(D109,\"No.\",D110),CONCATENATE(D109,\"No.\",D110,\"+\",D112,\"No.\",D113))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas_2=0,CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.no_de_varilla),CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.no_de_varilla,\"+\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas_2,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.no_de_varilla_2))"
+            },
+            "diametro_varilla_capa_1": {
+              "cell": "H109",
+              "label": "diametro_varilla_capa_1",
+              "is_input": false,
+              "formula_excel": "=#ref!",
+              "formula_json": "=#ref!"
+            },
+            "separacion_libre_capa_1": {
+              "cell": "I109",
+              "label": "separacion_libre_capa_1",
+              "is_input": false,
+              "formula_excel": "=($D$14-(2*$D$16)-(D109*H109/3))/(D109-1)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw-(2*mc_diseno_de_viga_di_viga_de_techo.datos_generales.recubrimiento_rec)-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.diametro_varilla_capa_1/3))/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas-1)"
+            },
+            "separacion_centro_capa_1": {
+              "cell": "J109",
+              "label": "separacion_centro_capa_1",
+              "is_input": false,
+              "formula_excel": "=+I109+H109",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.separacion_libre_capa_1+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.diametro_varilla_capa_1"
+            },
+            "chequeo_separacion_capa_1": {
+              "cell": "K109",
+              "label": "chequeo_separacion_capa_1",
+              "is_input": false,
+              "formula_excel": "=+IF(J109<=35,\"Ok\",\"disminuir separcion\")",
+              "formula_json": "=+IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.separacion_centro_capa_1<=35,\"Ok\",\"disminuir separcion\")"
+            },
+            "diametro_varilla_capa_2": {
+              "cell": "H110",
+              "label": "diametro_varilla_capa_2",
+              "is_input": false,
+              "formula_excel": "=#ref!",
+              "formula_json": "=#ref!"
+            },
+            "separacion_libre_capa_2": {
+              "cell": "I110",
+              "label": "separacion_libre_capa_2",
+              "is_input": false,
+              "formula_excel": "=($D$14-(2*$D$16)-(D109*H110/3))/(D109-1)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw-(2*mc_diseno_de_viga_di_viga_de_techo.datos_generales.recubrimiento_rec)-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.diametro_varilla_capa_2/3))/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.cantidad_de_varillas-1)"
+            },
+            "separacion_centro_capa_2": {
+              "cell": "J110",
+              "label": "separacion_centro_capa_2",
+              "is_input": false,
+              "formula_excel": "=+I110+H110",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.separacion_libre_capa_2+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.diametro_varilla_capa_2"
+            },
+            "chequeo_separacion_capa_2": {
+              "cell": "K110",
+              "label": "chequeo_separacion_capa_2",
+              "is_input": false,
+              "formula_excel": "=+IF(J110<=35,\"Ok\",\"disminuir separcion\")",
+              "formula_json": "=+IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.separacion_centro_capa_2<=35,\"Ok\",\"disminuir separcion\")"
+            },
+            "acero_necesario_puentes": {
+              "cell": "H115",
+              "label": "acero_necesario_puentes",
+              "is_input": false,
+              "formula_excel": "=+H66+D64",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_faltante_puentes+mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.acero_maximo_a_flexion_as_max"
+            }
+          }
+        },
+        "diseno_a_flexion_para_momento_m2_pos_lado_derecho": {
+          "title": "DISEÑO A FLEXION PARA MOMENTO M2(+) L. DERECHO",
+          "variables": {
+            "momento_positivo_m2_mas": {
+              "cell": "D133",
+              "label": "Momento positivo M2(+) ",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=IF(D13=\"P.E\",0.5*D61,IF(D13=\"P.I\",D61/3))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.E\",0.5*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.momento_nominal_phimn,IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.I\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.momento_nominal_phimn/3))"
+            },
+            "acero_as_m2_mas": {
+              "cell": "D134",
+              "label": "Acero As_M2(+)",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D133*100)/(D27*$D$10*D32*D17)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.momento_positivo_m2_mas*100)/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.brazo_j_asumido*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "acero_propuesto_para_momento": {
+              "cell": "D135",
+              "label": "Acero propuesto para momento ",
+              "is_input": true,
+              "value": null
+            },
+            "cantidad_de_varillas": {
+              "cell": "D136",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 3
+            },
+            "no_de_varilla": {
+              "cell": "D137",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla": {
+              "cell": "D138",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D137,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.no_de_varilla,Tabla39[#All],2,)"
+            },
+            "cantidad_de_varillas_2": {
+              "cell": "D139",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 0
+            },
+            "no_de_varilla_2": {
+              "cell": "D140",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla_2": {
+              "cell": "D141",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D140,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.no_de_varilla_2,Tabla39[#All],2,)"
+            },
+            "area_de_acero_propuesta_as": {
+              "cell": "D142",
+              "label": "Area de acero propuesta As",
+              "is_input": false,
+              "unit": "cm2 ",
+              "formula_excel": "=(D136*D138)+(D139*D141)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.area_de_la_varilla)+(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.cantidad_de_varillas_2*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.area_de_la_varilla_2)"
+            },
+            "area_de_acero_por_sap": {
+              "cell": "D143",
+              "label": "Area de acero por SAP ",
+              "is_input": true,
+              "unit": "cm2",
+              "value": 3.17
+            },
+            "a": {
+              "cell": "D144",
+              "label": "a: ",
+              "is_input": false,
+              "unit": " - ",
+              "formula_excel": "=(D142*$D$10)/(0.85*$D$9*D14)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "momento_nominal_phimn": {
+              "cell": "D145",
+              "label": "Momento nominal ϕMn",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=D27*D142*$D$10*(D17-(D144/2))/100",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.a/2))/100"
+            },
+            "d_c": {
+              "cell": "D146",
+              "label": "D/C",
+              "is_input": false,
+              "unit": "=IF(AND(D146<=1,D83<D142),\"Ok\",\"No ok\")",
+              "formula_excel": "=D133/D145",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.momento_positivo_m2_mas/mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.momento_nominal_phimn"
+            },
+            "armado_superior": {
+              "cell": "D147",
+              "label": "Armado superior ",
+              "is_input": false,
+              "formula_excel": "=IF(D139=0,CONCATENATE(D136,\"No.\",D137),CONCATENATE(D136,\"No.\",D137,\"+\",D139,\"No.\",D140))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.cantidad_de_varillas_2=0,CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.no_de_varilla),CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.no_de_varilla,\"+\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.cantidad_de_varillas_2,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.no_de_varilla_2))"
+            }
+          }
+        },
+        "diseno_por_momento_minimo_longitudinal": {
+          "title": "DISEÑO POR MOMENTO MINIMO LONGITUDINAL",
+          "variables": {
+            "momento_maximo_de_las_caras": {
+              "cell": "D150",
+              "label": "Momento maximo de las caras (-)",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=MAX(D81,D61)",
+              "formula_json": "=MAX(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.momento_nominal_phimn,mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.momento_nominal_phimn)"
+            },
+            "momento_minimo": {
+              "cell": "D151",
+              "label": "Momento minimo ",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=IF(D13=\"P.I\",D150/5,IF(D13=\"P.E\",D150/4))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.I\",mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.momento_maximo_de_las_caras/5,IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.E\",mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.momento_maximo_de_las_caras/4))"
+            },
+            "acero_as": {
+              "cell": "D152",
+              "label": "Acero As ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=(D151*100)/(D27*$D$10*D32*D17)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.momento_minimo*100)/(mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.brazo_j_asumido*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "acero_propuesto_para_momento": {
+              "cell": "D153",
+              "label": "Acero propuesto para momento ",
+              "is_input": true,
+              "value": null
+            },
+            "cantidad_de_varillas": {
+              "cell": "D154",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 3
+            },
+            "no_de_varilla": {
+              "cell": "D155",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla": {
+              "cell": "D156",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D155,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.no_de_varilla,Tabla39[#All],2,)"
+            },
+            "cantidad_de_varillas_2": {
+              "cell": "D157",
+              "label": "Cantidad de varillas ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 0
+            },
+            "no_de_varilla_2": {
+              "cell": "D158",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla_2": {
+              "cell": "D159",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D158,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.no_de_varilla_2,Tabla39[#All],2,)"
+            },
+            "area_de_acero_propuesta_as": {
+              "cell": "D160",
+              "label": "Area de acero propuesta As",
+              "is_input": false,
+              "unit": "cm2 ",
+              "formula_excel": "=(D154*D156)+(D157*D159)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.cantidad_de_varillas*mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.area_de_la_varilla)+(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.cantidad_de_varillas_2*mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.area_de_la_varilla_2)"
+            },
+            "area_de_acero_min_longitudinal": {
+              "cell": "D161",
+              "label": "Area de acero min longitudinal ",
+              "is_input": true,
+              "unit": "cm2",
+              "value": 0.58
+            },
+            "a": {
+              "cell": "D162",
+              "label": "a: ",
+              "is_input": false,
+              "unit": " - ",
+              "formula_excel": "=(D152*$D$10)/(0.85*$D$9*D14)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.acero_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "momento_nominal_phimn": {
+              "cell": "D163",
+              "label": "Momento nominal ϕMn",
+              "is_input": false,
+              "unit": "kgf-m ",
+              "formula_excel": "=D27*D160*$D$10*(D17-(D162/2))/100",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_base.factor_fhi_a_flexion_phi*mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.area_de_acero_propuesta_as*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.a/2))/100"
+            },
+            "d_c": {
+              "cell": "D164",
+              "label": "D/C",
+              "is_input": false,
+              "unit": "=IF(D164<=1,\"Ok\",\"No ok\")",
+              "formula_excel": "=D151/D163",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.momento_minimo/mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.momento_nominal_phimn"
+            },
+            "armado_longitudinal_en_toda_la_viga": {
+              "cell": "D165",
+              "label": "Armado longitudinal (en toda la viga) ",
+              "is_input": false,
+              "formula_excel": "=IF(D157=0,CONCATENATE(D154,\"No.\",D155),CONCATENATE(D154,\"No.\",D155,\"+\",D157,\"No.\",D158))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.cantidad_de_varillas_2=0,CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.no_de_varilla),CONCATENATE(mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.cantidad_de_varillas,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.no_de_varilla,\"+\",mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.cantidad_de_varillas_2,\"No.\",mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.no_de_varilla_2))"
+            }
+          }
+        },
+        "resumen": {
+          "title": "Resumen",
+          "variables": {
+            "armado_corrido_superior_e_inferior_minimo": {
+              "cell": "D168",
+              "label": "Armado corrido superior e inferior (minimo) ",
+              "is_input": false,
+              "formula_excel": "=D165",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_por_momento_minimo_longitudinal.armado_longitudinal_en_toda_la_viga"
+            },
+            "lado_izquier": {
+              "cell": "D169",
+              "label": "Lado izquier",
+              "is_input": false,
+              "formula_excel": "=CONCATENATE(\"Superior:\",D87,\"; Inferior:\",D104)",
+              "formula_json": "=CONCATENATE(\"Superior:\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.armado_superior,\"; Inferior:\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.armado_superior)"
+            },
+            "centro": {
+              "cell": "D170",
+              "label": "Centro",
+              "is_input": false,
+              "formula_excel": "=D130",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_en_el_centro_de_la_viga_m_pos.armado_superior"
+            },
+            "lado_derecho": {
+              "cell": "D171",
+              "label": "Lado derecho",
+              "is_input": false,
+              "formula_excel": "=CONCATENATE(\"Superior:\",D67,\"; Inferior:\",D147)",
+              "formula_json": "=CONCATENATE(\"Superior:\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.armado_superior,\"; Inferior:\",mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.armado_superior)"
+            },
+            "recubrimiento_resumen": {
+              "cell": "I166",
+              "label": "recubrimiento_resumen",
+              "is_input": false,
+              "formula_excel": "=D16",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.datos_generales.recubrimiento_rec"
+            },
+            "base_resumen": {
+              "cell": "I167",
+              "label": "base_resumen",
+              "is_input": false,
+              "formula_excel": "=D14",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw"
+            },
+            "base_util_resumen": {
+              "cell": "K167",
+              "label": "base_util_resumen",
+              "is_input": false,
+              "formula_excel": "=+I167-(2*I166)",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.resumen.base_resumen-(2*mc_diseno_de_viga_di_viga_de_techo.resumen.recubrimiento_resumen)"
+            },
+            "numero_varilla_resumen": {
+              "cell": "I168",
+              "label": "numero_varilla_resumen",
+              "is_input": true,
+              "value": 10
+            },
+            "diametro_varilla_resumen": {
+              "cell": "J168",
+              "label": "diametro_varilla_resumen",
+              "is_input": false,
+              "formula_excel": "=#ref!",
+              "formula_json": "=#ref!"
+            },
+            "medio_diametro_varilla_resumen": {
+              "cell": "L168",
+              "label": "medio_diametro_varilla_resumen",
+              "is_input": false,
+              "formula_excel": "=+J168/2",
+              "formula_json": "=+mc_diseno_de_viga_di_viga_de_techo.resumen.diametro_varilla_resumen/2"
+            },
+            "cantidad_varillas_resumen": {
+              "cell": "I169",
+              "label": "cantidad_varillas_resumen",
+              "is_input": true,
+              "value": 4
+            },
+            "separacion_libre_resumen": {
+              "cell": "I170",
+              "label": "separacion_libre_resumen",
+              "is_input": false,
+              "formula_excel": "=(I167-(2*I166)-(I169*J168))/(I169-1)",
+              "formula_json": "=(mc_diseno_de_viga_di_viga_de_techo.resumen.base_resumen-(2*mc_diseno_de_viga_di_viga_de_techo.resumen.recubrimiento_resumen)-(mc_diseno_de_viga_di_viga_de_techo.resumen.cantidad_varillas_resumen*mc_diseno_de_viga_di_viga_de_techo.resumen.diametro_varilla_resumen))/(mc_diseno_de_viga_di_viga_de_techo.resumen.cantidad_varillas_resumen-1)"
+            },
+            "separacion_eje_resumen": {
+              "cell": "J171",
+              "label": "separacion_eje_resumen",
+              "is_input": true,
+              "value": "cm"
+            }
+          }
+        }
+      }
+    },
+    "diseno_a_corte": {
+      "title": "DISEÑO A CORTE",
+      "steps": {
+        "potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha": {
+          "title": "PARA M2(-) LADEO HACIA LA DERECHA",
+          "variables": {
+            "resistencia_del_acero_fy": {
+              "cell": "D199",
+              "label": "Resistencia del acero Fy",
+              "is_input": true,
+              "unit": "kgf/cm2",
+              "value": 2810
+            },
+            "as_m2": {
+              "cell": "D200",
+              "label": "As M2(-) ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=D58",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_neg_lado_derecho.area_de_acero_propuesta_as"
+            },
+            "a": {
+              "cell": "D201",
+              "label": "a",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=(D200*1.25*$D$199)/(0.85*$D$9*D14)",
+              "formula_json": "=(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.as_m2*1.25*diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "fhi_inicial_para_corte": {
+              "cell": "D202",
+              "label": "Fhi inicial para corte ɸ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 1
+            },
+            "momento_maximo_probable": {
+              "cell": "D203",
+              "label": "Momento maximo probable ",
+              "is_input": false,
+              "unit": "kgf-m",
+              "formula_excel": "=D202*D200*1.25*$D$10*(D17-(D201/2))/100",
+              "formula_json": "=diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.fhi_inicial_para_corte*diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.as_m2*1.25*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.a/2))/100"
+            }
+          }
+        },
+        "potencial_formacion_articulacion_plastica_m1_pos_ladeo_derecha": {
+          "title": "PARA M1(+) LADEO HACIA LA DERECHA",
+          "variables": {
+            "as_m2": {
+              "cell": "D206",
+              "label": "As M2(-) ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=D99",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_pos_lado_izquierdo.area_de_acero_propuesta_as"
+            },
+            "a": {
+              "cell": "D207",
+              "label": "a",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=(D206*1.25*$D$199)/(0.85*$D$9*D14)",
+              "formula_json": "=(diseno_a_corte.potencial_formacion_articulacion_plastica_m1_pos_ladeo_derecha.as_m2*1.25*diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "fhi_inicial_para_corte": {
+              "cell": "D208",
+              "label": "Fhi inicial para corte ɸ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 1
+            },
+            "momento_maximo_porbable": {
+              "cell": "D209",
+              "label": "Momento maximo porbable ",
+              "is_input": false,
+              "unit": "kgf-m",
+              "formula_excel": "=D208*D206*1.25*$D$10*(D17-(D207/2))/100",
+              "formula_json": "=diseno_a_corte.potencial_formacion_articulacion_plastica_m1_pos_ladeo_derecha.fhi_inicial_para_corte*diseno_a_corte.potencial_formacion_articulacion_plastica_m1_pos_ladeo_derecha.as_m2*1.25*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(diseno_a_corte.potencial_formacion_articulacion_plastica_m1_pos_ladeo_derecha.a/2))/100"
+            }
+          }
+        },
+        "potencial_formacion_articulacion_plastica_m2_neg_ladeo_izquierda": {
+          "title": "PARA M2(-) LADEO HACIA LA IZQUIERDA",
+          "variables": {
+            "as_m2": {
+              "cell": "D212",
+              "label": "As M2(-) ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=D78",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m1_neg_lado_izquierdo.area_de_acero_propuesta_as"
+            },
+            "a": {
+              "cell": "D213",
+              "label": "a",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=(D212*1.25*$D$199)/(0.85*$D$9*D14)",
+              "formula_json": "=(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_izquierda.as_m2*1.25*diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "fhi_inicial_para_corte": {
+              "cell": "D214",
+              "label": "Fhi inicial para corte ɸ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 1
+            },
+            "momento_maximo_porbable": {
+              "cell": "D215",
+              "label": "Momento maximo porbable ",
+              "is_input": false,
+              "unit": "kgf-m",
+              "formula_excel": "=D214*D212*1.25*$D$10*(D17-(D213/2))/100",
+              "formula_json": "=diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_izquierda.fhi_inicial_para_corte*diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_izquierda.as_m2*1.25*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_izquierda.a/2))/100"
+            }
+          }
+        },
+        "potencial_formacion_articulacion_plastica_m2_pos_ladeo_izquierda": {
+          "title": "PARA M2(+) LADEO HACIA LA IZQUIERDA",
+          "variables": {
+            "as_m2": {
+              "cell": "D218",
+              "label": "As M2(-) ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=D142",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.diseno_a_flexion_para_momento_m2_pos_lado_derecho.area_de_acero_propuesta_as"
+            },
+            "a": {
+              "cell": "D219",
+              "label": "a",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=(D218*1.25*$D$199)/(0.85*$D$9*D14)",
+              "formula_json": "=(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_pos_ladeo_izquierda.as_m2*1.25*diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.resistencia_del_acero_fy)/(0.85*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw)"
+            },
+            "fhi_inicial_para_corte": {
+              "cell": "D220",
+              "label": "Fhi inicial para corte ɸ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 1
+            },
+            "momento_maximo_porbable": {
+              "cell": "D221",
+              "label": "Momento maximo porbable ",
+              "is_input": false,
+              "unit": "kgf-m",
+              "formula_excel": "=D220*D218*1.25*$D$10*(D17-(D219/2))/100",
+              "formula_json": "=diseno_a_corte.potencial_formacion_articulacion_plastica_m2_pos_ladeo_izquierda.fhi_inicial_para_corte*diseno_a_corte.potencial_formacion_articulacion_plastica_m2_pos_ladeo_izquierda.as_m2*1.25*mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_acero_fy*(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d-(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_pos_ladeo_izquierda.a/2))/100"
+            }
+          }
+        },
+        "corte_sismico": {
+          "title": "CORTE SISMICO",
+          "variables": {
+            "ve1": {
+              "cell": "D225",
+              "label": "Ve1",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=((D203+D209)/D18)-((D24*D18)/2)",
+              "formula_json": "=((diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.momento_maximo_probable+diseno_a_corte.potencial_formacion_articulacion_plastica_m1_pos_ladeo_derecha.momento_maximo_porbable)/mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)-((mc_diseno_de_viga_di_viga_de_techo.cargas_gravitacionales.carga_mayorada_wu*mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)/2)"
+            },
+            "ve2": {
+              "cell": "D226",
+              "label": "Ve2",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=((D203+D209)/D18)+((D24*D18)/2)",
+              "formula_json": "=((diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.momento_maximo_probable+diseno_a_corte.potencial_formacion_articulacion_plastica_m1_pos_ladeo_derecha.momento_maximo_porbable)/mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)+((mc_diseno_de_viga_di_viga_de_techo.cargas_gravitacionales.carga_mayorada_wu*mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)/2)"
+            },
+            "ladeo_a_la_izquierda": {
+              "cell": "D227",
+              "label": "LADEO A LA IZQUIERDA",
+              "is_input": true,
+              "value": null
+            },
+            "ve1_2": {
+              "cell": "D228",
+              "label": "Ve1",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=((D215+D221)/D18)+((D24*D18)/2)",
+              "formula_json": "=((diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_izquierda.momento_maximo_porbable+diseno_a_corte.potencial_formacion_articulacion_plastica_m2_pos_ladeo_izquierda.momento_maximo_porbable)/mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)+((mc_diseno_de_viga_di_viga_de_techo.cargas_gravitacionales.carga_mayorada_wu*mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)/2)"
+            },
+            "ve2_2": {
+              "cell": "D229",
+              "label": "Ve2",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=((D215+D221)/D18)-((D24*D18)/2)",
+              "formula_json": "=((diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_izquierda.momento_maximo_porbable+diseno_a_corte.potencial_formacion_articulacion_plastica_m2_pos_ladeo_izquierda.momento_maximo_porbable)/mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)-((mc_diseno_de_viga_di_viga_de_techo.cargas_gravitacionales.carga_mayorada_wu*mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)/2)"
+            },
+            "cortante_ulimo": {
+              "cell": "D230",
+              "label": "CORTANTE ULIMO ",
+              "is_input": true,
+              "value": null
+            },
+            "maximo_valor_de_ve1": {
+              "cell": "D231",
+              "label": "Maximo valor de Ve1",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=MAX(D225,D228)",
+              "formula_json": "=MAX(diseno_a_corte.corte_sismico.ve1,diseno_a_corte.corte_sismico.ve1_2)"
+            },
+            "maximo_valor_de_ve2": {
+              "cell": "D232",
+              "label": "Maximo valor de Ve2",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=MAX(D226,D229)",
+              "formula_json": "=MAX(diseno_a_corte.corte_sismico.ve2,diseno_a_corte.corte_sismico.ve2_2)"
+            },
+            "vladeo_der": {
+              "cell": "D233",
+              "label": "Vladeo_der",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=((D203+D209)/D18)",
+              "formula_json": "=((diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.momento_maximo_probable+diseno_a_corte.potencial_formacion_articulacion_plastica_m1_pos_ladeo_derecha.momento_maximo_porbable)/mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)"
+            },
+            "vladeo_izq": {
+              "cell": "D234",
+              "label": "Vladeo_izq",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=((D215+D221)/D18)",
+              "formula_json": "=((diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_izquierda.momento_maximo_porbable+diseno_a_corte.potencial_formacion_articulacion_plastica_m2_pos_ladeo_izquierda.momento_maximo_porbable)/mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l)"
+            },
+            "area_transversal_de_la_viga_ag": {
+              "cell": "D235",
+              "label": "Area transversal de la viga Ag",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=D14*D15",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw*mc_diseno_de_viga_di_viga_de_techo.datos_generales.alatura_de_la_viga_h"
+            },
+            "var": {
+              "cell": "D236",
+              "label": "ɸ",
+              "is_input": true,
+              "unit": " -",
+              "value": 0.75
+            },
+            "p_axial": {
+              "cell": "D237",
+              "label": "P axial",
+              "is_input": true,
+              "unit": "kgf",
+              "value": 184.32
+            },
+            "v_concreto": {
+              "cell": "D238",
+              "label": "V concreto ",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=IF(MAX(D233,D234)>MIN(D231/2,D232/2),0,(0.53*$D$12*SQRT($D$9)+D237/(6*D235))*D14*D17)",
+              "formula_json": "=IF(MAX(diseno_a_corte.corte_sismico.vladeo_der,diseno_a_corte.corte_sismico.vladeo_izq)>MIN(diseno_a_corte.corte_sismico.maximo_valor_de_ve1/2,diseno_a_corte.corte_sismico.maximo_valor_de_ve2/2),0,(0.53*mc_diseno_de_viga_di_viga_de_techo.datos_generales.tipo_de_concreto_hidraulico_lambda*SQRT(mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc)+diseno_a_corte.corte_sismico.p_axial/(6*diseno_a_corte.corte_sismico.area_transversal_de_la_viga_ag))*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "seccion_min_por_corte": {
+              "cell": "D239",
+              "label": "Seccion min por corte ",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=D236*(D238+2.2*SQRT($D$9)*D14*D17)",
+              "formula_json": "=diseno_a_corte.corte_sismico.var*(diseno_a_corte.corte_sismico.v_concreto+2.2*SQRT(mc_diseno_de_viga_di_viga_de_techo.datos_generales.resistencia_del_concreto_fc)*mc_diseno_de_viga_di_viga_de_techo.datos_generales.ancho_de_la_viga_bw*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "chqueo_de_seccion": {
+              "cell": "D240",
+              "label": "Chqueo de sección ",
+              "is_input": false,
+              "formula_excel": "=IF(D239>MAX(D231:D232),\"Ok\",\"No ok\")",
+              "formula_json": "=IF(diseno_a_corte.corte_sismico.seccion_min_por_corte>MAX(diseno_a_corte.corte_sismico.maximo_valor_de_ve1:diseno_a_corte.corte_sismico.maximo_valor_de_ve2),\"Ok\",\"No ok\")"
+            },
+            "ladeo_izquierdo": {
+              "cell": "D242",
+              "label": "LADEO IZQUIERDO ",
+              "is_input": true,
+              "value": null
+            },
+            "vs_acero": {
+              "cell": "D243",
+              "label": "Vs acero ",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=D228/D236 -D238",
+              "formula_json": "=diseno_a_corte.corte_sismico.ve1_2/diseno_a_corte.corte_sismico.var -diseno_a_corte.corte_sismico.v_concreto"
+            },
+            "area_de_acero_as": {
+              "cell": "D244",
+              "label": "Area de acero As",
+              "is_input": false,
+              "unit": "cm2/cm",
+              "formula_excel": "=D243/($D$199*D17)",
+              "formula_json": "=diseno_a_corte.corte_sismico.vs_acero/(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "ladeo_derecho": {
+              "cell": "D245",
+              "label": "LADEO DERECHO ",
+              "is_input": true,
+              "value": null
+            },
+            "vs_acero_2": {
+              "cell": "D246",
+              "label": "Vs acero ",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=(D232/D236)-D238",
+              "formula_json": "=(diseno_a_corte.corte_sismico.maximo_valor_de_ve2/diseno_a_corte.corte_sismico.var)-diseno_a_corte.corte_sismico.v_concreto"
+            },
+            "area_de_acero_as_2": {
+              "cell": "D247",
+              "label": "Area de acero As",
+              "is_input": false,
+              "unit": "cm2/cm",
+              "formula_excel": "=D246/($D$199*D17)",
+              "formula_json": "=diseno_a_corte.corte_sismico.vs_acero_2/(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "area_de_acero_a_utilizar_as": {
+              "cell": "D248",
+              "label": "area de acero a utilizar As: ",
+              "is_input": false,
+              "unit": "cm2/cm",
+              "formula_excel": "=MAX(D244,D247)",
+              "formula_json": "=MAX(diseno_a_corte.corte_sismico.area_de_acero_as,diseno_a_corte.corte_sismico.area_de_acero_as_2)"
+            }
+          }
+        }
+      }
+    },
+    "zona_confinada": {
+      "title": "ZONA CONFINADA",
+      "steps": {
+        "zona_confinada": {
+          "title": "ZONA CONFINADA",
+          "variables": {
+            "no_de_varilla": {
+              "cell": "D251",
+              "label": "No. De varilla ",
+              "is_input": true,
+              "unit": " - ",
+              "value": 4
+            },
+            "area_de_la_varilla": {
+              "cell": "D252",
+              "label": "Area de la varilla ",
+              "is_input": false,
+              "unit": "cm2",
+              "formula_excel": "=VLOOKUP(D251,Tabla39[#All],2,)",
+              "formula_json": "=VLOOKUP(zona_confinada.zona_confinada.no_de_varilla,Tabla39[#All],2,)"
+            },
+            "separacion_en_zona_confinada": {
+              "cell": "D253",
+              "label": "Separación en zona confinada ",
+              "is_input": true,
+              "value": null
+            },
+            "s_calculada": {
+              "cell": "D254",
+              "label": "S calculada ",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=(2*D252)/D248",
+              "formula_json": "=(2*zona_confinada.zona_confinada.area_de_la_varilla)/diseno_a_corte.corte_sismico.area_de_acero_a_utilizar_as"
+            },
+            "s_a_utilizar": {
+              "cell": "D255",
+              "label": "S a utilizar ",
+              "is_input": true,
+              "unit": "cm ",
+              "value": 7
+            },
+            "longitud_de_confinamiento_lo": {
+              "cell": "D256",
+              "label": "Longitud de confinamiento Lo",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=2*D15",
+              "formula_json": "=2*mc_diseno_de_viga_di_viga_de_techo.datos_generales.alatura_de_la_viga_h"
+            },
+            "diametro_de_barra_principal_a_flexion_mas_pequena": {
+              "cell": "D257",
+              "label": "Diametro de barra principal a flexion mas pequeña ",
+              "is_input": true,
+              "unit": " - ",
+              "value": "=MIN(IF(G247:L247<>0,G247:L247))"
+            },
+            "separacion_maxima_zona_confinada": {
+              "cell": "D258",
+              "label": "Separación maxima zona confinada",
+              "is_input": false,
+              "unit": "cm",
+              "formula_excel": "=IF(D13=\"P.I\",MIN(D17/4,30,8*D257*2.54/8,24*D251*2.54/8),IF(D13=\"P.E\",MIN(D17/4,15,6*D257*2.54/8)))",
+              "formula_json": "=IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.I\",MIN(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d/4,30,8*zona_confinada.zona_confinada.diametro_de_barra_principal_a_flexion_mas_pequena*2.54/8,24*zona_confinada.zona_confinada.no_de_varilla*2.54/8),IF(mc_diseno_de_viga_di_viga_de_techo.datos_generales.portico=\"P.E\",MIN(mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d/4,15,6*zona_confinada.zona_confinada.diametro_de_barra_principal_a_flexion_mas_pequena*2.54/8)))"
+            },
+            "chequeo_de_separacion": {
+              "cell": "D259",
+              "label": "Chequeo de separacion ",
+              "is_input": false,
+              "formula_excel": "=IF(D255<=D258,\"Ok\",\"No ok\")",
+              "formula_json": "=IF(zona_confinada.zona_confinada.s_a_utilizar<=zona_confinada.zona_confinada.separacion_maxima_zona_confinada,\"Ok\",\"No ok\")"
+            },
+            "separacion_libre": {
+              "cell": "H252",
+              "label": "separacion_libre",
+              "is_input": false,
+              "formula_excel": "=D255-D252",
+              "formula_json": "=zona_confinada.zona_confinada.s_a_utilizar-zona_confinada.zona_confinada.area_de_la_varilla"
+            },
+            "chequeo_separacion_libre": {
+              "cell": "J252",
+              "label": "chequeo_separacion_libre",
+              "is_input": false,
+              "formula_excel": "=+IF(H252>4,\"OK\",\"NO OK\")",
+              "formula_json": "=+IF(zona_confinada.zona_confinada.separacion_libre>4,\"OK\",\"NO OK\")"
+            }
+          }
+        },
+        "zona_no_confinada": {
+          "title": "ZONA NO CONFINADA",
+          "variables": {
+            "corte_max_en_zona_no_confinada": {
+              "cell": "D262",
+              "label": "Corte max en zona no confinada",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=MAX(D231:D232)-(D24*D256/100)",
+              "formula_json": "=MAX(diseno_a_corte.corte_sismico.maximo_valor_de_ve1:diseno_a_corte.corte_sismico.maximo_valor_de_ve2)-(mc_diseno_de_viga_di_viga_de_techo.cargas_gravitacionales.carga_mayorada_wu*zona_confinada.zona_confinada.longitud_de_confinamiento_lo/100)"
+            },
+            "cortante_actuante_a_2h_por_el_acero": {
+              "cell": "D263",
+              "label": "Cortante actuante a 2H por el acero ",
+              "is_input": false,
+              "unit": "kgf",
+              "formula_excel": "=(D262/D236)-D238",
+              "formula_json": "=(zona_confinada.zona_no_confinada.corte_max_en_zona_no_confinada/diseno_a_corte.corte_sismico.var)-diseno_a_corte.corte_sismico.v_concreto"
+            },
+            "acero_en_parte_central_de_la_viga": {
+              "cell": "D264",
+              "label": "Acero en parte central de la viga",
+              "is_input": false,
+              "unit": "cm2/cm",
+              "formula_excel": "=D263/($D$199*D17)",
+              "formula_json": "=zona_confinada.zona_no_confinada.cortante_actuante_a_2h_por_el_acero/(diseno_a_corte.potencial_formacion_articulacion_plastica_m2_neg_ladeo_derecha.resistencia_del_acero_fy*mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d)"
+            },
+            "separacion_calculada": {
+              "cell": "D265",
+              "label": "Separacion calculada ",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=2*D252/D264",
+              "formula_json": "=2*zona_confinada.zona_confinada.area_de_la_varilla/zona_confinada.zona_no_confinada.acero_en_parte_central_de_la_viga"
+            },
+            "separacion_a_utilizar": {
+              "cell": "D266",
+              "label": "Separacion a utilizar ",
+              "is_input": true,
+              "unit": "cm ",
+              "value": 10
+            },
+            "separacion_maxima_smax": {
+              "cell": "D267",
+              "label": "Separacion maxima Smax",
+              "is_input": false,
+              "unit": "=IF(D266<=D267,\"Ok\",\"No ok\")",
+              "formula_excel": "=D17/2",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.datos_generales.peralte_efectivo_d/2"
+            }
+          }
+        },
+        "chequeo_de_deflexiones": {
+          "title": "CHEQUEO DE DEFLEXIONES SEGÚN ACI 318-19",
+          "variables": {
+            "deflexion_permisibel_l_180": {
+              "cell": "D270",
+              "label": "Deflexion permisibel L/180",
+              "is_input": false,
+              "unit": "cm ",
+              "formula_excel": "=D18*100/180",
+              "formula_json": "=mc_diseno_de_viga_di_viga_de_techo.datos_generales.luz_entre_apoyos_l*100/180"
+            },
+            "deflexion_de_la_viga": {
+              "cell": "D271",
+              "label": "Deflexion de la viga",
+              "is_input": true,
+              "unit": "cm ",
+              "value": null
+            },
+            "chequeo_de_deflexiones_segun_aci_318_19": {
+              "cell": "D272",
+              "label": "CHEQUEO DE DEFLEXIONES SEGÚN ACI 318-19",
+              "is_input": false,
+              "formula_excel": "=+IF(D271<=D270,\"OK\",\"No Ok\")",
+              "formula_json": "=+IF(zona_confinada.chequeo_de_deflexiones.deflexion_de_la_viga<=zona_confinada.chequeo_de_deflexiones.deflexion_permisibel_l_180,\"OK\",\"No Ok\")"
+            }
+          }
+        }
+      }
+    },
+    "resumen_final_de_viga": {
+      "title": "RESUMEN FINAL DE VIGA",
+      "steps": {
+        "conclusion": {
+          "title": "CONCLUSION",
+          "variables": {
+            "concatenate_conclusion_1r_estribo_a_5_cm_luego_no_d251_d255_cm_en_d256_100_m_zona_no_confinada_no_d251_d266_cm": {
+              "cell": "D279",
+              "label": "=CONCATENATE(\"CONCLUSION: 1r estribo a 5 cm, luego No.\",D251,\"@ \",D255,\"cm en\",D256/100,\"m\",\" zona no confinada: No.\",D251,\"@\",D266,\"cm\")",
+              "is_input": true,
+              "value": null
+            }
+          }
+        }
+      }
+    }
+  }
+}
