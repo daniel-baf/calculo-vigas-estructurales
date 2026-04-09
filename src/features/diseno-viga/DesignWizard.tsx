@@ -9,6 +9,7 @@ import { useDisenoFlexionM1 } from "@/features/diseno-viga/steps/5-diseno-flexio
 import { useDisenoFlexionM1Pos } from "@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/useDisenoFlexionM1Pos"
 import { useDisenoFlexionMCentro } from "@/features/diseno-viga/steps/7-diseno-flexion-m-center/useDisenoFlexionMCentro"
 import { useDisenoFlexionM2Pos } from "@/features/diseno-viga/steps/8-diseno-flexion-m2-pos/useDisenoFlexionM2Pos"
+import { useMomentoMinimo } from "@/features/diseno-viga/steps/9-momento-minimo/useMomentoMinimo"
 
 import { ChecksBanner } from "@/components/ui/ChecksBanner"
 import { Wizard } from "@/components/wizard/Wizard"
@@ -84,6 +85,17 @@ export function DesignWizard() {
     asMin: step4.resultado?.asMin || 0,
   })
 
+  const step9 = useMomentoMinimo({
+    fc: step1.fc,
+    fy: step1.fy,
+    beta: step1.beta ?? 0.85,
+    bw: step1.bw,
+    d: step1.d,
+    portico: step1.portico,
+    phiMnM1Neg: step5.resultado?.phiMn || 0,
+    phiMnM2Neg: step4.resultado?.phiMn || 0,
+  })
+
   const showBanner = useMemo(() => {
     if (currentIdx === 2) {
       const filled = !!step3.M1 && !!step3.Mcenter && !!step3.M2
@@ -122,8 +134,17 @@ export function DesignWizard() {
     if (currentIdx === 7) {
       return !!step8.resultado && !step8.resultado.cumpleDC
     }
+    if (currentIdx === 8) {
+      const filled = !!step9.qty1 && !!step9.no1
+      const allChecksOk =
+        step9.resultado?.chequeoAsEtabs === "Ok" &&
+        step9.resultado?.chequeo_dc === "Ok" &&
+        step9.resultado?.chequeoAsMinMax === "Ok" &&
+        step9.resultado?.chequeoSeccionControlada === "Ok"
+      return filled && !allChecksOk
+    }
     return false
-  }, [currentIdx, step3, step4, step5, step6, step7, step8])
+  }, [currentIdx, step3, step4, step5, step6, step7, step8, step9])
 
   const steps = createDesignWizardSteps({
     step1,
@@ -134,6 +155,7 @@ export function DesignWizard() {
     step6,
     step7,
     step8,
+    step9,
   })
 
   useEffect(() => {
@@ -153,12 +175,12 @@ export function DesignWizard() {
       if (e.key.toLowerCase() !== "a") return
 
       e.preventDefault()
-      applyDesignWizardMock({ step1, step2, step3, step4, step5, step6, step7, step8 })
+      applyDesignWizardMock({ step1, step2, step3, step4, step5, step6, step7, step8, step9 })
     }
 
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [step1, step2, step3, step4, step5, step6, step7])
+  }, [step1, step2, step3, step4, step5, step6, step7, step8, step9])
 
   return (
     <>
@@ -231,6 +253,7 @@ export function DesignWizard() {
               step6,
               step7,
               step8,
+              step9,
             })
           }
         >

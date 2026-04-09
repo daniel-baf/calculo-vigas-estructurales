@@ -6,6 +6,9 @@ import type { DisenoFlexionM1State } from "@/features/diseno-viga/steps/5-diseno
 import type { M1PosState } from "@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/useDisenoFlexionM1Pos"
 import type { DisenoFlexionMCentroState } from "@/features/diseno-viga/steps/7-diseno-flexion-m-center/useDisenoFlexionMCentro"
 import type { M2PosState } from "@/features/diseno-viga/steps/8-diseno-flexion-m2-pos/useDisenoFlexionM2Pos"
+import type { useMomentoMinimo } from "@/features/diseno-viga/steps/9-momento-minimo/useMomentoMinimo"
+
+type MomentoMinimoState = ReturnType<typeof useMomentoMinimo>
 
 interface ApplyDesignWizardMockProps {
   step1: Pick<
@@ -38,6 +41,10 @@ interface ApplyDesignWizardMockProps {
     "setAsEtabs" | "setQty1" | "setNo1" | "setQty2" | "setNo2"
   >
   step8: Pick<M2PosState, "setAsEtabs" | "setN1" | "setNo1">
+  step9: Pick<
+    MomentoMinimoState,
+    "setQty1" | "setNo1" | "setQty2" | "setNo2" | "setAsMinUser"
+  >
 }
 
 export function applyDesignWizardMock({
@@ -49,6 +56,7 @@ export function applyDesignWizardMock({
   step6,
   step7,
   step8,
+  step9,
 }: ApplyDesignWizardMockProps) {
   step1.setFc(280)
   step1.setGradoAcero("G60")
@@ -93,4 +101,10 @@ export function applyDesignWizardMock({
   step8.setAsEtabs("3.17")
   step8.setN1("3")
   step8.setNo1(4)
+
+  step9.setQty1("3")
+  step9.setNo1(4)
+  step9.setQty2("0")
+  step9.setNo2(4)
+  step9.setAsMinUser("0.58")
 }

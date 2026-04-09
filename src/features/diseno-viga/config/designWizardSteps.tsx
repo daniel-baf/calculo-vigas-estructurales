@@ -8,6 +8,9 @@ import type { DisenoFlexionM1State } from "@/features/diseno-viga/steps/5-diseno
 import type { M1PosState } from "@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/useDisenoFlexionM1Pos"
 import type { DisenoFlexionMCentroState } from "@/features/diseno-viga/steps/7-diseno-flexion-m-center/useDisenoFlexionMCentro"
 import type { M2PosState } from "@/features/diseno-viga/steps/8-diseno-flexion-m2-pos/useDisenoFlexionM2Pos"
+import type { useMomentoMinimo } from "@/features/diseno-viga/steps/9-momento-minimo/useMomentoMinimo"
+
+type MomentoMinimoState = ReturnType<typeof useMomentoMinimo>
 
 const ParametrosBasicosStep = lazy(() =>
   import("@/features/diseno-viga/steps/1-parametros-basicos/ParametrosBasicosStep").then(
@@ -54,6 +57,11 @@ const DisenoFlexionM2PosStep = lazy(() =>
     (m) => ({ default: m.DisenoFlexionM2PosStep })
   )
 )
+const MomentoMinimoStep = lazy(() =>
+  import("@/features/diseno-viga/steps/9-momento-minimo/MomentoMinimoStep").then(
+    (m) => ({ default: m.MomentoMinimoStep })
+  )
+)
 
 const stepFallback = (
   <div className="py-8 text-center text-sm text-muted-foreground">
@@ -70,6 +78,7 @@ interface CreateDesignWizardStepsProps {
   step6: M1PosState
   step7: DisenoFlexionMCentroState
   step8: M2PosState
+  step9: MomentoMinimoState
 }
 
 export function createDesignWizardSteps({
@@ -81,6 +90,7 @@ export function createDesignWizardSteps({
   step6,
   step7,
   step8,
+  step9,
 }: CreateDesignWizardStepsProps) {
   return [
     {
@@ -162,6 +172,16 @@ export function createDesignWizardSteps({
         </Suspense>
       ),
       isValid: step8.isValid,
+    },
+    {
+      id: "momento-minimo-longitudinal",
+      title: "As Min Long.",
+      component: (
+        <Suspense fallback={stepFallback}>
+          <MomentoMinimoStep {...step9} />
+        </Suspense>
+      ),
+      isValid: step9.isValid,
     },
     {
       id: "cortante-resumen",
