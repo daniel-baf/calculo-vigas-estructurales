@@ -5,6 +5,7 @@ import type { DisenoFlexionM2State } from "@/features/diseno-viga/steps/4-diseno
 import type { DisenoFlexionM1State } from "@/features/diseno-viga/steps/5-diseno-flexion-m1/useDisenoFlexionM1"
 import type { M1PosState } from "@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/useDisenoFlexionM1Pos"
 import type { DisenoFlexionMCentroState } from "@/features/diseno-viga/steps/7-diseno-flexion-m-center/useDisenoFlexionMCentro"
+import type { M2PosState } from "@/features/diseno-viga/steps/8-diseno-flexion-m2-pos/useDisenoFlexionM2Pos"
 
 interface ApplyDesignWizardMockProps {
   step1: Pick<
@@ -36,6 +37,7 @@ interface ApplyDesignWizardMockProps {
     DisenoFlexionMCentroState,
     "setAsEtabs" | "setQty1" | "setNo1" | "setQty2" | "setNo2"
   >
+  step8: Pick<M2PosState, "setAsEtabs" | "setN1" | "setNo1">
 }
 
 export function applyDesignWizardMock({
@@ -46,6 +48,7 @@ export function applyDesignWizardMock({
   step5,
   step6,
   step7,
+  step8,
 }: ApplyDesignWizardMockProps) {
   step1.setFc(280)
   step1.setGradoAcero("G60")
@@ -86,4 +89,8 @@ export function applyDesignWizardMock({
   step7.setNo1(4)
   step7.setQty2("0")
   step7.setNo2(4)
+
+  step8.setAsEtabs("3.17")
+  step8.setN1("3")
+  step8.setNo1(4)
 }

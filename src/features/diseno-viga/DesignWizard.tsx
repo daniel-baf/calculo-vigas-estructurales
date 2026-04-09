@@ -8,6 +8,7 @@ import { useDisenoFlexionM2 } from "@/features/diseno-viga/steps/4-diseno-flexio
 import { useDisenoFlexionM1 } from "@/features/diseno-viga/steps/5-diseno-flexion-m1/useDisenoFlexionM1"
 import { useDisenoFlexionM1Pos } from "@/features/diseno-viga/steps/6-diseno-flexion-m1-pos/useDisenoFlexionM1Pos"
 import { useDisenoFlexionMCentro } from "@/features/diseno-viga/steps/7-diseno-flexion-m-center/useDisenoFlexionMCentro"
+import { useDisenoFlexionM2Pos } from "@/features/diseno-viga/steps/8-diseno-flexion-m2-pos/useDisenoFlexionM2Pos"
 
 import { ChecksBanner } from "@/components/ui/ChecksBanner"
 import { Wizard } from "@/components/wizard/Wizard"
@@ -63,6 +64,17 @@ export function DesignWizard() {
     step1.d
   )
 
+  const step8 = useDisenoFlexionM2Pos({
+    fc: step1.fc,
+    fy: step1.fy,
+    bw: step1.bw,
+    d: step1.d,
+    beta: step1.beta ?? 0.85,
+    portico: step1.portico,
+    phiMnNegM2: step4.resultado?.phiMn || 0,
+    asMin: step4.resultado?.asMin || 0,
+  })
+
   const showBanner = useMemo(() => {
     if (currentIdx === 2) {
       const filled = !!step3.M1 && !!step3.Mcenter && !!step3.M2
@@ -98,8 +110,11 @@ export function DesignWizard() {
         step7.resultado?.chequeoSeccionControlada === "Ok"
       return filled && !allChecksOk
     }
+    if (currentIdx === 7) {
+      return !!step8.resultado && !step8.resultado.cumpleDC
+    }
     return false
-  }, [currentIdx, step3, step4, step5, step6, step7])
+  }, [currentIdx, step3, step4, step5, step6, step7, step8])
 
   const steps = createDesignWizardSteps({
     step1,
@@ -109,6 +124,7 @@ export function DesignWizard() {
     step5,
     step6,
     step7,
+    step8,
   })
 
   useEffect(() => {
@@ -128,7 +144,7 @@ export function DesignWizard() {
       if (e.key.toLowerCase() !== "a") return
 
       e.preventDefault()
-      applyDesignWizardMock({ step1, step2, step3, step4, step5, step6, step7 })
+      applyDesignWizardMock({ step1, step2, step3, step4, step5, step6, step7, step8 })
     }
 
     window.addEventListener("keydown", onKeyDown)
@@ -158,6 +174,7 @@ export function DesignWizard() {
               step5,
               step6,
               step7,
+              step8,
             })
           }
         >
