@@ -5,6 +5,7 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/calculo-vigas-estructurales/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
