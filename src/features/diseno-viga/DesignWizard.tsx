@@ -12,6 +12,7 @@ import { useDisenoFlexionM2Pos } from "@/features/diseno-viga/steps/8-diseno-fle
 
 import { ChecksBanner } from "@/components/ui/ChecksBanner"
 import { Wizard } from "@/components/wizard/Wizard"
+import { BeamProgressDiagram } from "@/components/beam-diagram/BeamProgressDiagram"
 import { applyDesignWizardMock } from "@/features/diseno-viga/mock/applyDesignWizardMock"
 import { createDesignWizardSteps } from "@/features/diseno-viga/config/designWizardSteps"
 
@@ -166,6 +167,53 @@ export function DesignWizard() {
         <ChecksBanner show={showBanner} />
         <Wizard steps={steps} onStepChange={setCurrentIdx} />
       </div>
+
+      {/* Diagrama progresivo de armado — visible cuando la viga tiene datos básicos */}
+      {step1.isValid && (
+        <div className="dashboard-panel mt-6 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6">
+          <BeamProgressDiagram
+            bw={step1.bw}
+            h={step1.h}
+            L={Number(step1.L)}
+            currentStep={currentIdx}
+            step4={{
+              qty1: step4.qty1,
+              no1: step4.no1,
+              qty2: step4.qty2,
+              no2: step4.no2,
+              isValid: step4.isValid,
+            }}
+            step5={{
+              qty1: step5.qty1,
+              no1: step5.no1,
+              qty2: step5.qty2,
+              no2: step5.no2,
+              isValid: step5.isValid,
+            }}
+            step6={{
+              qty1: step6.n1,
+              no1: step6.no1,
+              qty2: step6.n2,
+              no2: step6.no2,
+              isValid: step6.isValid,
+            }}
+            step7={{
+              qty1: step7.qty1,
+              no1: step7.no1,
+              qty2: step7.qty2,
+              no2: step7.no2,
+              isValid: step7.isValid,
+            }}
+            step8={{
+              qty1: step8.n1,
+              no1: step8.no1,
+              qty2: step8.n2,
+              no2: step8.no2,
+              isValid: step8.isValid,
+            }}
+          />
+        </div>
+      )}
 
       <div className="fixed right-4 bottom-4 z-50">
         <Button
