@@ -3,24 +3,24 @@ import type { M1PosState } from "../useDisenoFlexionM1Pos"
 
 type Props = Pick<
   M1PosState,
-  | "n1"
-  | "setN1"
+  | "qty1"
+  | "setQty1"
   | "no1"
   | "setNo1"
-  | "n2"
-  | "setN2"
+  | "qty2"
+  | "setQty2"
   | "no2"
   | "setNo2"
   | "errors"
 >
 
 export function ProposedSteelSection({
-  n1,
-  setN1,
+  qty1,
+  setQty1,
   no1,
   setNo1,
-  n2,
-  setN2,
+  qty2,
+  setQty2,
   no2,
   setNo2,
   errors,
@@ -30,22 +30,22 @@ export function ProposedSteelSection({
       <RebarRow
         prefix="v1"
         label="Capa 1 (Inf)"
-        qty={n1}
+        qty={qty1}
         no={no1}
-        onQtyChange={setN1}
+        onQtyChange={setQty1}
         onNoChange={setNo1}
-        qtyError={errors.n1}
+        qtyError={errors.qty1}
         noError={errors.no1}
         alignLeft
       />
       <RebarRow
         prefix="v2"
         label="Capa 2 (Inf)"
-        qty={n2}
+        qty={qty2}
         no={no2}
-        onQtyChange={setN2}
+        onQtyChange={setQty2}
         onNoChange={setNo2}
-        qtyError={errors.n2}
+        qtyError={errors.qty2}
         noError={errors.no2}
         optional
         alignLeft

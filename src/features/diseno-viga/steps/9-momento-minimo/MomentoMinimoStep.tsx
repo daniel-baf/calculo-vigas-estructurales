@@ -83,7 +83,7 @@ export function MomentoMinimoStep(props: MomentoMinimoState) {
                 Resumen de armado longitudinal
               </span>
               <span className="text-lg font-bold tracking-tight text-primary">
-                {props.resultado.armado}
+                {props.resultado.armadoSuperior}
               </span>
             </div>
           </StepSection>

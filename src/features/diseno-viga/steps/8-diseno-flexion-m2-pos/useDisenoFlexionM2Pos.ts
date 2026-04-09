@@ -32,9 +32,9 @@ export function useDisenoFlexionM2Pos({
   asMin,
 }: UseM2PosProps) {
   const [asEtabs, setAsEtabs] = useState("")
-  const [n1, setN1] = useState("3")
+  const [qty1, setQty1] = useState("3")
   const [no1, setNo1] = useState<number>(4)
-  const [n2, setN2] = useState("0")
+  const [qty2, setQty2] = useState("0")
   const [no2, setNo2] = useState<number>(4)
 
   // Configuración de variantes
@@ -43,7 +43,7 @@ export function useDisenoFlexionM2Pos({
   const [maxVariantes, setMaxVariantes] = useState("5")
   const [soloHorizontales, setSoloHorizontales] = useState(true)
 
-  const input: M2PosInput = { asEtabs, n1, no1, n2, no2 }
+  const input: M2PosInput = { asEtabs, qty1, no1, qty2, no2 }
 
   const params = useMemo(
     () => ({
@@ -84,9 +84,9 @@ export function useDisenoFlexionM2Pos({
   const limpiarVariantes = () => setVariantes([])
 
   const seleccionarVariante = (v: ResultadoRefuerzo) => {
-    setN1(v.inputs.qty1.toString())
+    setQty1(v.inputs.qty1.toString())
     setNo1(v.inputs.no1)
-    setN2(v.inputs.qty2.toString())
+    setQty2(v.inputs.qty2.toString())
     setNo2(v.inputs.no2)
     setVariantes([])
   }
@@ -94,12 +94,12 @@ export function useDisenoFlexionM2Pos({
   return {
     asEtabs,
     setAsEtabs,
-    n1,
-    setN1,
+    qty1,
+    setQty1,
     no1,
     setNo1,
-    n2,
-    setN2,
+    qty2,
+    setQty2,
     no2,
     setNo2,
     resultado,

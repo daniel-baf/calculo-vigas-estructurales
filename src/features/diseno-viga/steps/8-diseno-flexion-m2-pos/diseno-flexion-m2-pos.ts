@@ -29,9 +29,9 @@ export interface M2PosParams {
 
 export interface M2PosInput {
   asEtabs: string
-  n1: string
+  qty1: string
   no1: number
-  n2: string
+  qty2: string
   no2: number
 }
 
@@ -86,21 +86,21 @@ export function calcularDisenoM2Pos(
   const asReq = (mu * 100) / (phiFlexion * (fy || 4200) * jAsumido * (d || 1))
 
   // 2. Calcular acero propuesto
-  const n1 = parseInt(input.n1) || 0
+  const qty1 = parseInt(input.qty1) || 0
   const no1 = input.no1 || 0
-  const n2 = parseInt(input.n2) || 0
+  const qty2 = parseInt(input.qty2) || 0
   const no2 = input.no2 || 0
 
   const v1 = VARILLA_MAP[no1] || { area: 0 }
   const v2 = VARILLA_MAP[no2] || { area: 0 }
-  const asProp = n1 * v1.area + n2 * v2.area
+  const asProp = qty1 * v1.area + qty2 * v2.area
 
   // 3. Validaciones compartidas
   const { errors, alertas } = validarRefuerzoShared({
     asEtabs: parseFloat(input.asEtabs) || 0,
-    qty1: n1,
+    qty1: qty1,
     no1,
-    qty2: n2,
+    qty2: qty2,
     no2,
   })
 

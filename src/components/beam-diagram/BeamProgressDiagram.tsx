@@ -9,7 +9,7 @@
 
 import { useState } from "react"
 import { BarGroup, type BarState } from "./BarGroup"
-import { formatBarGroup } from "./barLabel"
+import { formatBarGroup } from "@/shared/diseno-refuerzo/formatUtils"
 
 // ---------------------------------------------------------------------------
 // Tipos de Props
@@ -33,6 +33,7 @@ export interface BeamProgressDiagramProps {
   step6: BarZoneInput
   step7: BarZoneInput
   step8: BarZoneInput
+  step9: BarZoneInput
 }
 
 // ---------------------------------------------------------------------------
@@ -92,9 +93,9 @@ function stepState(
   isValid: boolean,
   currentStep: number
 ): BarState {
+  if (isValid) return "complete"
   if (currentStep < stepIndex) return "pending"
-  if (currentStep === stepIndex) return isValid ? "complete" : "active"
-  return isValid ? "complete" : "active"
+  return "active"
 }
 
 // ---------------------------------------------------------------------------
@@ -140,6 +141,7 @@ export function BeamProgressDiagram({
   step6,
   step7,
   step8,
+  step9,
 }: BeamProgressDiagramProps) {
   const [hoveredZone, setHoveredZone] = useState<HoveredZoneInfo | null>(null)
 
@@ -148,20 +150,24 @@ export function BeamProgressDiagram({
   const IDX_M1_POS = 5
   const IDX_M_CENTER = 6
   const IDX_M2_POS = 7
+  const IDX_M_MIN = 8
 
   const stateTopLeft    = stepState(IDX_M1_NEG, step5.isValid, currentStep)
+  const stateTopCenter  = stepState(IDX_M_MIN, step9.isValid, currentStep)
   const stateTopRight   = stepState(IDX_M2_NEG, step4.isValid, currentStep)
   const stateBotLeft    = stepState(IDX_M1_POS, step6.isValid, currentStep)
   const stateBotCenter  = stepState(IDX_M_CENTER, step7.isValid, currentStep)
   const stateBotRight   = stepState(IDX_M2_POS, step8.isValid, currentStep)
 
   const labelTopLeft   = formatBarGroup(Number(step5.qty1), step5.no1, Number(step5.qty2), step5.no2)
+  const labelTopCenter = formatBarGroup(Number(step9.qty1), step9.no1, Number(step9.qty2), step9.no2)
   const labelTopRight  = formatBarGroup(Number(step4.qty1), step4.no1, Number(step4.qty2), step4.no2)
   const labelBotLeft   = formatBarGroup(Number(step6.qty1), step6.no1, Number(step6.qty2), step6.no2)
   const labelBotCenter = formatBarGroup(Number(step7.qty1), step7.no1, Number(step7.qty2), step7.no2)
   const labelBotRight  = formatBarGroup(Number(step8.qty1), step8.no1, Number(step8.qty2), step8.no2)
 
   const hasTopLeft2   = Number(step5.qty2) > 0 && step5.no2 > 0
+  const hasTopCenter2 = Number(step9.qty2) > 0 && step9.no2 > 0
   const hasTopRight2  = Number(step4.qty2) > 0 && step4.no2 > 0
   const hasBotLeft2   = Number(step6.qty2) > 0 && step6.no2 > 0
   const hasBotCenter2 = Number(step7.qty2) > 0 && step7.no2 > 0
@@ -185,6 +191,14 @@ export function BeamProgressDiagram({
       w: BASTON_W,
       hh: BEAM_H / 2,
       info: { id: "top-left", momentLabel: "M1(−)", position: "Apoyo Izquierdo", label: labelTopLeft || "—", state: stateTopLeft, side: "left", vertical: "top" },
+    },
+    {
+      id: "top-center",
+      x: BEAM_X0 + BASTON_W,
+      y: BEAM_Y0,
+      w: BEAM_W - BASTON_W * 2,
+      hh: BEAM_H / 2,
+      info: { id: "top-center", momentLabel: "M_min (Corrido)", position: "Centro Superior", label: labelTopCenter || "—", state: stateTopCenter, side: "center", vertical: "top" },
     },
     {
       id: "top-right",
@@ -229,13 +243,13 @@ export function BeamProgressDiagram({
         <span className="text-xs text-muted-foreground">{beamLabel}</span>
       </div>
 
-      <div className="rounded-xl border border-border bg-card/60 p-3">
+      <div className="rounded-xl border p-3 shadow-sm border-border bg-card/60">
         {/* Tooltip flotante */}
         <div className="relative mb-1 h-0">
-          {hoveredZone && (
-            <HoverTooltip zone={hoveredZone} beamW={BEAM_W} />
-          )}
-        </div>
+            {hoveredZone && (
+              <HoverTooltip zone={hoveredZone} beamW={BEAM_W} />
+            )}
+          </div>
 
         <svg
           viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -249,8 +263,7 @@ export function BeamProgressDiagram({
             y={BEAM_Y0}
             width={BEAM_W}
             height={BEAM_H}
-            fill="hsl(220 14% 10%)"
-            stroke="hsl(220 13% 30%)"
+            className="fill-white stroke-black dark:fill-[hsl(220,14%,10%)] dark:stroke-[hsl(220,13%,30%)]"
             strokeWidth={1.5}
             rx={2}
           />
@@ -262,7 +275,7 @@ export function BeamProgressDiagram({
               cx={BEAM_X0 + 40 + ((i * 173) % (BEAM_W - 80))}
               cy={BEAM_Y0 + 18 + ((i * 97) % (BEAM_H - 36))}
               r={1.2}
-              fill="hsl(220 13% 22%)"
+              className="fill-slate-200 dark:fill-[hsl(220,13%,22%)]"
             />
           ))}
 
@@ -274,15 +287,15 @@ export function BeamProgressDiagram({
           ].map(({ x, label }) => (
             <g key={label}>
               <line x1={x} y1={BEAM_Y0 - 14} x2={x} y2={BEAM_Y1 + 14}
-                stroke="hsl(220 13% 35%)" strokeWidth={0.8} strokeDasharray="4 3" />
+                className="stroke-black dark:stroke-[hsl(220,13%,35%)]" strokeWidth={0.8} strokeDasharray="4 3" />
               <text x={x} y={BEAM_Y0 - 18} textAnchor="middle" fontSize={9}
                 fontFamily="'Inter', ui-sans-serif, sans-serif" fontWeight="600"
-                fill="hsl(220 13% 50%)">
+                className="fill-black dark:fill-[hsl(220,13%,50%)]">
                 {label}
               </text>
               <text x={x} y={BEAM_Y1 + 22} textAnchor="middle" fontSize={9}
                 fontFamily="'Inter', ui-sans-serif, sans-serif" fontWeight="600"
-                fill="hsl(220 13% 50%)">
+                className="fill-black dark:fill-[hsl(220,13%,50%)]">
                 {label}′
               </text>
             </g>
@@ -290,18 +303,18 @@ export function BeamProgressDiagram({
 
           {/* Dimensión h */}
           <line x1={BEAM_X0 - 12} y1={BEAM_Y0} x2={BEAM_X0 - 12} y2={BEAM_Y1}
-            stroke="hsl(220 13% 40%)" strokeWidth={0.8} />
+            className="stroke-black dark:stroke-[hsl(220,13%,40%)]" strokeWidth={0.8} />
           <line x1={BEAM_X0 - 16} y1={BEAM_Y0} x2={BEAM_X0 - 8} y2={BEAM_Y0}
-            stroke="hsl(220 13% 40%)" strokeWidth={0.8} />
+            className="stroke-black dark:stroke-[hsl(220,13%,40%)]" strokeWidth={0.8} />
           <line x1={BEAM_X0 - 16} y1={BEAM_Y1} x2={BEAM_X0 - 8} y2={BEAM_Y1}
-            stroke="hsl(220 13% 40%)" strokeWidth={0.8} />
+            className="stroke-black dark:stroke-[hsl(220,13%,40%)]" strokeWidth={0.8} />
           <text
             x={BEAM_X0 - 22}
             y={(BEAM_Y0 + BEAM_Y1) / 2}
             textAnchor="middle"
             fontSize={8}
             fontFamily="'Inter', ui-sans-serif, sans-serif"
-            fill="hsl(220 13% 50%)"
+            className="fill-black dark:fill-[hsl(220,13%,50%)]"
             transform={`rotate(-90, ${BEAM_X0 - 22}, ${(BEAM_Y0 + BEAM_Y1) / 2})`}
           >
             {h} cm
@@ -312,6 +325,11 @@ export function BeamProgressDiagram({
             x1={BEAM_X0 + COVER} x2={BEAM_X0 + BASTON_W}
             y={Y_TOP} label={labelTopLeft} state={stateTopLeft}
             labelPosition="above" hasSecondRow={hasTopLeft2} secondRowOffset={7}
+          />
+          <BarGroup
+            x1={BEAM_X0 + BASTON_W} x2={BEAM_X1 - BASTON_W}
+            y={Y_TOP} label={labelTopCenter} state={stateTopCenter}
+            labelPosition="above" hasSecondRow={hasTopCenter2} secondRowOffset={7}
           />
           <BarGroup
             x1={BEAM_X1 - BASTON_W} x2={BEAM_X1 - COVER}

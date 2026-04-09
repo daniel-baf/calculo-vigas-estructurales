@@ -35,12 +35,12 @@ interface ApplyDesignWizardMockProps {
     DisenoFlexionM1State,
     "setAsEtabs" | "setQty1" | "setNo1" | "setQty2" | "setNo2"
   >
-  step6: Pick<M1PosState, "setAsEtabs" | "setN1" | "setNo1">
+  step6: Pick<M1PosState, "setAsEtabs" | "setQty1" | "setNo1">
   step7: Pick<
     DisenoFlexionMCentroState,
     "setAsEtabs" | "setQty1" | "setNo1" | "setQty2" | "setNo2"
   >
-  step8: Pick<M2PosState, "setAsEtabs" | "setN1" | "setNo1">
+  step8: Pick<M2PosState, "setAsEtabs" | "setQty1" | "setNo1">
   step9: Pick<
     MomentoMinimoState,
     "setQty1" | "setNo1" | "setQty2" | "setNo2" | "setAsMinUser"
@@ -89,7 +89,7 @@ export function applyDesignWizardMock({
   step5.setNo2(4)
 
   step6.setAsEtabs("3.18")
-  step6.setN1("3")
+  step6.setQty1("3")
   step6.setNo1(4)
 
   step7.setAsEtabs("3.31")
@@ -99,7 +99,7 @@ export function applyDesignWizardMock({
   step7.setNo2(4)
 
   step8.setAsEtabs("3.17")
-  step8.setN1("3")
+  step8.setQty1("3")
   step8.setNo1(4)
 
   step9.setQty1("3")

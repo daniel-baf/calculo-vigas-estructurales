@@ -233,6 +233,13 @@ export function DesignWizard() {
               no2: step8.no2,
               isValid: step8.isValid,
             }}
+            step9={{
+              qty1: step9.qty1,
+              no1: step9.no1,
+              qty2: step9.qty2,
+              no2: step9.no2,
+              isValid: step9.isValid,
+            }}
           />
         </div>
       )}

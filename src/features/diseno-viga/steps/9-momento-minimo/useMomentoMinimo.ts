@@ -75,18 +75,18 @@ export function useMomentoMinimo(params: UseMomentoMinimoParams) {
 
     const customC = beta > 0 ? customA / beta : 0
     const limiteC = 0.375 * d
-    const customChequeoSeccionControlada = customC < limiteC ? "Ok" : "No ok"
+    const customChequeoSeccionControlada: ("Ok" | "No Ok") = customC < limiteC ? "Ok" : "No Ok"
 
     return {
       ...shared.resultado,
       asMin: roundedAsMinUser,
-      chequeoAsMinMax: shared.resultado.asPropuesta >= roundedAsMinUser ? "Ok" : "No ok",
+      chequeoAsMinMax: (shared.resultado.asPropuesta >= roundedAsMinUser ? "Ok" : "No Ok") as "Ok" | "No Ok",
       a: customA,
       phiMn: customPhiMn,
       dc: customDc,
-      chequeo_dc: customDc <= 1 ? ("Ok" as const) : ("No Ok" as const),
+      chequeo_dc: (customDc <= 1 ? "Ok" : "No Ok") as "Ok" | "No Ok",
       c: customC,
-      chequeoSeccionControlada: customChequeoSeccionControlada as any,
+      chequeoSeccionControlada: customChequeoSeccionControlada,
       procesos: {
         ...shared.resultado.procesos,
         a: {
@@ -105,7 +105,7 @@ export function useMomentoMinimo(params: UseMomentoMinimoParams) {
     }
   }, [shared.resultado, roundedAsMinUser, asRequerido, fy, fc, bw, d, momentoMinimoDemandado, beta])
 
-  const checkAsMinMaxExt = shared.resultado?.asPropuesta && shared.resultado.asPropuesta >= roundedAsMinUser ? "Ok" : "No ok"
+  const checkAsMinMaxExt = shared.resultado?.asPropuesta && shared.resultado.asPropuesta >= roundedAsMinUser ? "Ok" : "No Ok"
 
   const isValidExt =
     shared.isValid &&

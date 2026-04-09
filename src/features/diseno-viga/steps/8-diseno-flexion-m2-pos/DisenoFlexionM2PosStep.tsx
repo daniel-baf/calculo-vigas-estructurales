@@ -54,12 +54,12 @@ export function DisenoFlexionM2PosStep(props: M2PosState) {
 
       <StepSection title="Acero propuesto para momento">
         <ProposedSteelSection
-          n1={props.n1}
-          setN1={props.setN1}
+          qty1={props.qty1}
+          setQty1={props.setQty1}
           no1={props.no1}
           setNo1={props.setNo1}
-          n2={props.n2}
-          setN2={props.setN2}
+          qty2={props.qty2}
+          setQty2={props.setQty2}
           no2={props.no2}
           setNo2={props.setNo2}
           errors={props.errors}

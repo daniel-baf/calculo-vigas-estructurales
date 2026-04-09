@@ -43,7 +43,7 @@ const DisenoFlexionM1PosStep = lazy(() =>
   )
 )
 const CortanteResumenStep = lazy(() =>
-  import("@/features/diseno-viga/steps/7-cortante-resumen/CortanteResumenStep").then(
+  import("@/features/diseno-viga/steps/10-cortante-resumen/CortanteResumenStep").then(
     (m) => ({ default: m.CortanteResumenStep })
   )
 )
@@ -60,6 +60,11 @@ const DisenoFlexionM2PosStep = lazy(() =>
 const MomentoMinimoStep = lazy(() =>
   import("@/features/diseno-viga/steps/9-momento-minimo/MomentoMinimoStep").then(
     (m) => ({ default: m.MomentoMinimoStep })
+  )
+)
+const DetalleArmadoReporteStep = lazy(() =>
+  import("@/features/diseno-viga/steps/11-detalle-armado-reporte/DetalleArmadoReporteStep").then(
+    (m) => ({ default: m.DetalleArmadoReporteStep })
   )
 )
 
@@ -188,7 +193,35 @@ export function createDesignWizardSteps({
       title: "Resumen",
       component: (
         <Suspense fallback={stepFallback}>
-          <CortanteResumenStep />
+          <CortanteResumenStep 
+            step1={step1}
+            step4={step4}
+            step5={step5}
+            step6={step6}
+            step7={step7}
+            step8={step8}
+            step9={step9}
+          />
+        </Suspense>
+      ),
+      isValid: true,
+    },
+    {
+      id: "detalle-armado-reporte",
+      title: "Reporte Final",
+      component: (
+        <Suspense fallback={stepFallback}>
+          <DetalleArmadoReporteStep 
+            step1={step1}
+            step2={step2}
+            step3={step3}
+            step4={step4}
+            step5={step5}
+            step6={step6}
+            step7={step7}
+            step8={step8}
+            step9={step9}
+          />
         </Suspense>
       ),
       isValid: true,
