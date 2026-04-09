@@ -135,9 +135,9 @@ export function DetalleArmadoReporteStep(props: Props) {
           <div className="space-y-2">
             <SectionHeader title="Cargas y Momentos" />
             <div className="space-y-1">
-              <DataRow label="Área Tributaria" value={step2.at} unit="m²" />
-              <DataRow label="Carga Muerta" value={step2.wd} unit="kgf/m²" />
-              <DataRow label="Carga Viva" value={step2.wl} unit="kgf/m²" />
+              <DataRow label="Área Tributaria" value={step2.AT} unit="m²" />
+              <DataRow label="Carga Muerta" value={step2.scKgM2} unit="kgf/m²" />
+              <DataRow label="Carga Viva" value={step2.cvKgM2} unit="kgf/m²" />
               <div className="h-4" />
               <DataRow label="M1 (-) Izquierdo" value={step3.M1} unit="kgf·m" />
               <DataRow label="M(+) Centro" value={step3.Mcenter} unit="kgf·m" />
@@ -228,6 +228,8 @@ export function DetalleArmadoReporteStep(props: Props) {
             <BeamCrossSection
               title="Corte A-A'"
               subtitle={`Viga ${step1.bw}x${step1.h}cm`}
+              bw={step1.bw}
+              h={step1.h}
               fc={step1.fc}
               fy={step1.fy}
               topContinuous={{ qty: topLeft.qty1, no: topLeft.no1 }}
@@ -238,6 +240,8 @@ export function DetalleArmadoReporteStep(props: Props) {
             <BeamCrossSection
               title="Corte B-B'"
               subtitle={`Viga ${step1.bw}x${step1.h}cm`}
+              bw={step1.bw}
+              h={step1.h}
               fc={step1.fc}
               fy={step1.fy}
               topContinuous={{ qty: topCenter.qty1, no: topCenter.no1 }}
@@ -248,6 +252,8 @@ export function DetalleArmadoReporteStep(props: Props) {
             <BeamCrossSection
               title="Corte C-C'"
               subtitle={`Viga ${step1.bw}x${step1.h}cm`}
+              bw={step1.bw}
+              h={step1.h}
               fc={step1.fc}
               fy={step1.fy}
               topContinuous={{ qty: topRight.qty1, no: topRight.no1 }}

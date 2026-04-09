@@ -59,8 +59,8 @@ export function useDisenoFlexionM1Pos({
   )
 
   const resultado = useMemo(() => {
-    return calcularDisenoM1Pos(params, input, nosPermitidos)
-  }, [params, input, nosPermitidos])
+    return calcularDisenoM1Pos(params, input)
+  }, [params, input])
 
   // Validaciones de UI
   const errors: Record<string, string> = resultado?.errors || {}

@@ -1,4 +1,3 @@
-import React from "react"
 import { extractArgs, formatRebar } from "@/shared/diseno-refuerzo/formatUtils"
 
 export function SectionHeader({ title }: { title: string }) {

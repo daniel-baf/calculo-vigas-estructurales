@@ -64,11 +64,11 @@ export function DesignWizard() {
     step1.beta ?? 0.85,
     step1.bw,
     step1.d,
-    step6.n1
+    step6.qty1
       ? {
-          qty1: step6.n1,
+          qty1: step6.qty1,
           no1: step6.no1,
-          qty2: step6.n2,
+          qty2: step6.qty2,
           no2: step6.no2,
         }
       : undefined
@@ -213,9 +213,9 @@ export function DesignWizard() {
               isValid: step5.isValid,
             }}
             step6={{
-              qty1: step6.n1,
+              qty1: Number(step6.qty1),
               no1: step6.no1,
-              qty2: step6.n2,
+              qty2: Number(step6.qty2),
               no2: step6.no2,
               isValid: step6.isValid,
             }}
@@ -227,9 +227,9 @@ export function DesignWizard() {
               isValid: step7.isValid,
             }}
             step8={{
-              qty1: step8.n1,
+              qty1: Number(step8.qty1),
               no1: step8.no1,
-              qty2: step8.n2,
+              qty2: Number(step8.qty2),
               no2: step8.no2,
               isValid: step8.isValid,
             }}
