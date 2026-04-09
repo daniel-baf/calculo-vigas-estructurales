@@ -5,6 +5,7 @@
 import {
   useDisenoRefuerzo,
   type UseDisenoRefuerzoParams,
+  type UseDisenoRefuerzoInitialValues,
 } from "@/shared/hooks/useDisenoRefuerzo"
 import { PHI_FLEXION, BRAZO_J } from "~/steps/3-diseno-flexion/diseno-flexion"
 import type {
@@ -40,6 +41,7 @@ export interface DisenoFlexionMCentroState {
   buscarVariantes: () => void
   limpiarVariantes: () => void
   seleccionarVariante: (v: ResultadoDisenoMCentro) => void
+  preseleccionadoDesdePaso6: boolean
 }
 
 export function useDisenoFlexionMCentro(
@@ -48,7 +50,8 @@ export function useDisenoFlexionMCentro(
   fy: number,
   beta: number,
   bw: number,
-  d: number
+  d: number,
+  initialValues?: UseDisenoRefuerzoInitialValues
 ): DisenoFlexionMCentroState {
   const asMcenterBase = (Mcenter * 100) / (PHI_FLEXION * fy * BRAZO_J * d)
   const params: UseDisenoRefuerzoParams = {
@@ -61,6 +64,7 @@ export function useDisenoFlexionMCentro(
     beta,
     bw,
     d,
+    initialValues,
   }
 
   const shared = useDisenoRefuerzo(params)
@@ -84,5 +88,6 @@ export function useDisenoFlexionMCentro(
       shared.seleccionarVariante(
         v as unknown as Parameters<typeof shared.seleccionarVariante>[0]
       ),
+    preseleccionadoDesdePaso6: !!initialValues?.qty1,
   }
 }

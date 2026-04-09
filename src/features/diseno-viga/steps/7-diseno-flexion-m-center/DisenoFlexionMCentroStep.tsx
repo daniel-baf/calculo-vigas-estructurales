@@ -21,6 +21,23 @@ export function DisenoFlexionMCentroStep(props: DisenoFlexionMCentroState) {
         </p>
       </div>
 
+      {props.preseleccionadoDesdePaso6 && (
+        <div className="flex items-start gap-3 rounded-xl border border-blue-500/30 bg-blue-500/8 px-4 py-3">
+          <span className="mt-0.5 text-base leading-none text-blue-400">&#9432;</span>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-blue-300">
+              Acero pre-seleccionado desde el Paso 6
+            </p>
+            <p className="mt-0.5 text-xs text-blue-400/80">
+              Se usó la misma combinación de varillas del M1(+) Izquierdo, ya
+              que estructuralmente el refuerzo inferior del centro de la viga
+              suele ser continuo con el del extremo izquierdo. Puedes modificarlo
+              si el diseño lo requiere.
+            </p>
+          </div>
+        </div>
+      )}
+
       <StepSection title="Acero As_M(+)">
         <AsCalculadoCard
           title="Acero As_M(+) calculado"
@@ -84,3 +101,4 @@ export function DisenoFlexionMCentroStep(props: DisenoFlexionMCentroState) {
     </div>
   )
 }
+

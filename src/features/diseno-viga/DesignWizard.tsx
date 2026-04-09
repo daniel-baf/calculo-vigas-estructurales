@@ -61,7 +61,15 @@ export function DesignWizard() {
     step1.fy,
     step1.beta ?? 0.85,
     step1.bw,
-    step1.d
+    step1.d,
+    step6.n1
+      ? {
+          qty1: step6.n1,
+          no1: step6.no1,
+          qty2: step6.n2,
+          no2: step6.no2,
+        }
+      : undefined
   )
 
   const step8 = useDisenoFlexionM2Pos({

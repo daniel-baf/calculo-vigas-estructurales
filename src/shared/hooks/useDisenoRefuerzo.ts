@@ -43,6 +43,13 @@ export interface DisenoRefuerzoState {
   seleccionarVariante: (v: ResultadoRefuerzo) => void
 }
 
+export interface UseDisenoRefuerzoInitialValues {
+  qty1?: string
+  no1?: number
+  qty2?: string
+  no2?: number
+}
+
 export interface UseDisenoRefuerzoParams {
   momento: number
   momentoLabel: string
@@ -53,19 +60,30 @@ export interface UseDisenoRefuerzoParams {
   beta: number
   bw: number
   d: number
+  initialValues?: UseDisenoRefuerzoInitialValues
 }
 
 export function useDisenoRefuerzo(
   params: UseDisenoRefuerzoParams
 ): DisenoRefuerzoState {
-  const { momento, momentoLabel, phiFlexion, brazoJ, fc, fy, beta, bw, d } =
-    params
+  const {
+    momento,
+    momentoLabel,
+    phiFlexion,
+    brazoJ,
+    fc,
+    fy,
+    beta,
+    bw,
+    d,
+    initialValues,
+  } = params
 
   const [asEtabs, setAsEtabs] = useState("")
-  const [qty1, setQty1] = useState("")
-  const [no1, setNo1] = useState<number>(6)
-  const [qty2, setQty2] = useState("")
-  const [no2, setNo2] = useState<number>(0)
+  const [qty1, setQty1] = useState(initialValues?.qty1 ?? "")
+  const [no1, setNo1] = useState<number>(initialValues?.no1 ?? 6)
+  const [qty2, setQty2] = useState(initialValues?.qty2 ?? "")
+  const [no2, setNo2] = useState<number>(initialValues?.no2 ?? 0)
 
   const [nosPermitidos, setNosPermitidos] = useState<number[]>([3, 4, 5, 6])
   const [variantes, setVariantes] = useState<ResultadoRefuerzo[]>([])
